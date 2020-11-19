@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "1009452959835",
+    "firebase_url": "https://faceu-c621a.firebaseio.com",
+    "project_id": "faceu-c621a",
+    "storage_bucket": "faceu-c621a.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1009452959835:android:c7885b1c29a8e7e056d77e",
+        "android_client_info": {
+          "package_name": "com.example.face_u"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1009452959835-laoka0oop6cgutjb1a0v1mpatlrgeopv.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.face_u",
+            "certificate_hash": "cf203eaf4f78432e3443a5db4a81f4606ab33fc0"
+          }
+        },
+        {
+          "client_id": "1009452959835-vsr74m5srmvh22pv06u452kec4h4969r.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAtPk7FOuV58vodAtRerb9Oc9768neGPss"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1009452959835-vsr74m5srmvh22pv06u452kec4h4969r.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
