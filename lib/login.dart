@@ -31,12 +31,6 @@ class _LogInPageState extends State<LogInPage> {
           children: <Widget>[
             Icon(Icons.camera, size: 50,),
             SizedBox(height: 30),
-            FlatButton(
-              child: Text('홈'),
-              onPressed: (){
-                Navigator.pushNamed(context, '/home');
-              },
-            )
             //_AnonymouslySignInSection(),
             //_OtherProvidersSignInSection(),
           ],
