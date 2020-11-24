@@ -154,7 +154,7 @@ class _ListCardsState extends State<ListCards> {
             children: <Widget>[
               ListTile(
                 leading: Icon(Icons.image),
-                title: Text("이름 : ${widget.name}"),
+                title: Text("이름 확인차 하는 겁니다 : ${widget.name}"),
                 subtitle: Text("관계 : ${widget.relationship}"),
               ),
             ],
