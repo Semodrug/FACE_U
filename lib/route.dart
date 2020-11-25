@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import 'camera.dart';
 import 'login.dart';
 import 'home.dart';
 
@@ -18,13 +19,15 @@ class FaceUApp extends StatelessWidget {
         title: 'Shrine',
         home: HomePage(),//HomePage
 //        initialRoute: '/login',
-        initialRoute: '/home',
+//        initialRoute: '/home',
+        initialRoute: '/camera',
         routes: {
           '/login': (context) => LogInPage(),
           '/home': (context) => HomePage(),
           '/add': (context) => AddPage(),
           '/recognition': (context) => Recognition(),
           '/plan': (context) => Plan(),
+          '/camera': (context) => Camera(),
         },
       theme: ThemeData(
 
