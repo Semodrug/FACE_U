@@ -1,3 +1,5 @@
+import 'package:face_u/people.dart';
+import 'package:face_u/plan.dart';
 import 'package:flutter/material.dart';
 
 import 'camera.dart';
@@ -9,14 +11,12 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   int _selectedIndex = 0;
-  static const List<Widget> _widgetOptions =
-  <Widget>[
-//    PeoplePage()
-    Text('Index 0: Home'),
-        Text('Index 1: Camera'),
-    Text('Index 2: Plan'),
-  ];
 
+  final List<Widget> _widgetOptions = [
+    PeoplePage(),
+    Camera(),
+    Plan()
+  ];
   void _onItemTapped(int index) {
     setState(() {
       _selectedIndex = index;
@@ -51,7 +51,7 @@ class _HomePageState extends State<HomePage> {
                 label: 'home'
             ),
             BottomNavigationBarItem(
-                icon: Icon(Icons.home),
+                icon: Icon(Icons.camera_alt),
                 label: 'camera'
             ),
             BottomNavigationBarItem(
