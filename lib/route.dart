@@ -11,6 +11,7 @@ import 'recognition.dart';
 class FaceUApp extends StatelessWidget {
   Color color = const Color(0xffFFdb80);
 
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -28,6 +29,7 @@ class FaceUApp extends StatelessWidget {
       theme: ThemeData(
 
         primaryColor: Color(0xffFFdb80),
+
         bottomAppBarColor: Color(0xffFFCB83),
         textTheme: TextTheme(
           headline1: TextStyle(fontSize: 20.0, fontFamily: 'OmniGothic',
@@ -36,8 +38,12 @@ class FaceUApp extends StatelessWidget {
               color: Colors.black87, fontWeight: FontWeight.bold),
 //          headline1: TextStyle(fontSize: 72.0, fontWeight: FontWeight.bold),
           headline6: TextStyle(fontSize: 36.0, fontStyle: FontStyle.italic),
-          bodyText2: TextStyle(fontSize: 14.0, fontFamily: 'Hind',
-          color: Colors.black54),
+//          bodyText2: TextStyle(fontSize: 14.0, fontFamily: 'Hind',
+//          color: Colors.black54),
+          bodyText1: TextStyle(fontSize: 14.0, fontFamily: 'NotoSans',
+              color: Colors.black54, ),
+          bodyText2: TextStyle(fontSize: 12.0, fontFamily: 'NotoSans',
+            color: Colors.black54, ),
         ),
       )
       //onGenerateRoute: _getRoute,
