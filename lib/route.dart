@@ -19,7 +19,7 @@ class FaceUApp extends StatelessWidget {
         home: HomePage(), //HomePage
 //        initialRoute: '/login',
 //        initialRoute: '/home',
-        initialRoute: '/camera',
+        initialRoute: '/home',
         routes: {
           '/login': (context) => LogInPage(),
           '/home': (context) => HomePage(),

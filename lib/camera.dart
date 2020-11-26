@@ -43,7 +43,8 @@ class CameraState extends State<Camera> {
         children: [
 //          SizedBox(height: 360),
           Container(
-              child: Image(image: (_image != null) ? FileImage(_image) : NetworkImage(""),)
+              child: Image(image: (_image != null) ? FileImage(_image) : NetworkImage(""),),
+            height: 330
           ),
           Padding(
             padding: const EdgeInsets.only(left: 25.0),
@@ -52,7 +53,7 @@ class CameraState extends State<Camera> {
               style: Theme.of(context).textTheme.bodyText1),
           ),
           SizedBox(height: 10),
-          Divider(height: 1.6, color: Colors.black45,),
+          Divider(height: 1, color: Colors.black45,),
 //                indent: 15, endIndent: 15),
           SizedBox(height: 20),
           Row(
@@ -86,15 +87,6 @@ class CameraState extends State<Camera> {
                 ],
               ),
               SizedBox(width: 20),
-//              CircleAvatar(
-//                backgroundImage: NetworkImage(_profileImageURL),
-//                radius: 30,
-//              ),
-              CircleAvatar(
-                backgroundImage:
-                (_image != null) ? FileImage(_image) : NetworkImage(""),
-                radius: 30,
-              ),
             ],
           )
         ],
