@@ -16,10 +16,10 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   int _selectedIndex = 0;
 
-  String _filterOrSort = "이름순"; //추가
-  Query query = FirebaseFirestore.instance.collection('product');
-
-  final num = 32; // streambuilder 로 불러오기
+//  String _filterOrSort = "이름순"; //추가
+//  Query query = FirebaseFirestore.instance.collection('product');
+//
+//  final num = 32; // streambuilder 로 불러오기
 
   final List<Widget> _widgetOptions = [
     PeoplePage(),
@@ -40,16 +40,18 @@ class _HomePageState extends State<HomePage> {
           backgroundColor: Theme.of(context).primaryColor,
           title: Text("FaceU", style: Theme.of(context).textTheme.headline1)
       ),
-      body: _buildBody(context),
-      floatingActionButton: FloatingActionButton(
-        backgroundColor: Theme.of(context).primaryColor,
-        child: Icon(Icons.add),
-        onPressed: () {
-          print('move to add page');
-          Navigator.pushNamed(context, '/add');
-        },
-      ),
-      //TODO: floating button presse 하면 Addpage
+      body: Center(
+        child: _widgetOptions.elementAt(_selectedIndex),
+      ),//      body: _buildBody(context),
+//      floatingActionButton: FloatingActionButton(
+//        backgroundColor: Theme.of(context).primaryColor,
+//        child: Icon(Icons.add),
+//        onPressed: () {
+//          print('move to add page');
+//          Navigator.pushNamed(context, '/add');
+//        },
+//      ),
+//      //TODO: floating button presse 하면 Addpage
 
       bottomNavigationBar: BottomNavigationBar(
           items: const <BottomNavigationBarItem> [
@@ -73,7 +75,7 @@ class _HomePageState extends State<HomePage> {
 
     );
   }
-
+/*
   Widget _countDrowpdown(context, num) {
     return Row(
       children: <Widget>[
@@ -189,8 +191,11 @@ class _HomePageState extends State<HomePage> {
       });
     }
   }
-}
 
+*/
+
+}
+/*
 class Persons {
   final String name;
   final String image;
@@ -311,3 +316,4 @@ class _ListCardsState extends State<ListCards> {
         ));
   }
 }
+*/
