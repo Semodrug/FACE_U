@@ -2,6 +2,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:face_u/people.dart';
 import 'package:flutter/material.dart';
 
+import 'demo.dart';
+import 'plan_add.dart';
 import 'plan_detail.dart';
 
 class Plan extends StatefulWidget {
@@ -11,10 +13,24 @@ class Plan extends StatefulWidget {
 
 class _PlanState extends State<Plan> {
   Color purple2 = const Color(0xffF1E7FF);
+  Color purple3 = const Color(0xffC5B0E1);
+
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => PlanAddPage(),
+            ),
+          );
+        },
+        child: Icon(Icons.add_circle, size: 40),
+        backgroundColor: purple3
+      ),
       body: Padding(
         padding: const EdgeInsets.all(10.0),
         child: Column(
@@ -23,8 +39,8 @@ class _PlanState extends State<Plan> {
             SearchBar(),
             Row(
               children: <Widget>[
-                SizedBox(width:10),
-                Text('사람들'), // theme 추가
+                SizedBox(width:15),
+                Text('Plans'),// theme 추가
                 ButtonTheme(
                   minWidth: 10,
                   height: 22,
@@ -61,7 +77,7 @@ class _PlanState extends State<Plan> {
               return GridView.count(
                   crossAxisCount: 1,
                   padding: EdgeInsets.all(10.0),
-                  childAspectRatio: 8.0 / 6.55,
+                  childAspectRatio: 8.0 / 6.4,
                   children: snapshot.data.docs.map((DocumentSnapshot data) {
                     var record = Record.fromSnapshot(data);
                     return Card(
@@ -76,15 +92,39 @@ class _PlanState extends State<Plan> {
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: <Widget>[
                                   SizedBox(height: 5),
-                                  Container(
-                                    padding: EdgeInsets.symmetric(vertical: 0.5,horizontal: 5),
-                                    decoration: BoxDecoration(
-                                      color: purple2,
-                                      borderRadius: BorderRadius.all(Radius.circular(5)),),
-                                    child: Text(record.time.toDate().toString().substring(0,4) + "년 " +
-                                        record.time.toDate().toString().substring(5,7)+ "월  " +
-                                        record.time.toDate().toString().substring(8,11) + "일 " ,
-                                        style: Theme.of(context).textTheme.bodyText1),
+                                  Row(
+                                    children: [
+                                      Container(
+                                        padding: EdgeInsets.symmetric(vertical: 0.5,horizontal: 5),
+                                        decoration: BoxDecoration(
+                                          color: purple2,
+                                          borderRadius: BorderRadius.all(Radius.circular(5)),),
+                                        child: Text(record.time.toDate().toString().substring(0,4) + "년 " +
+                                            record.time.toDate().toString().substring(5,7)+ "월  " +
+                                            record.time.toDate().toString().substring(8,11) + "일 " ,
+                                            style: Theme.of(context).textTheme.bodyText1),
+                                      ),
+                                      SizedBox(width: 152),
+                                      InkWell(
+                                        child: Icon(Icons.create, size: 20, color:Colors.grey),
+                                        onTap: () {
+                                          Navigator.push(context, MaterialPageRoute(
+//                                            builder: (context) => PlanDetailPage()
+                                              builder: (context) => DateTimePicker()
+
+                                          )) ;
+                                        },
+                                      ),
+                                      SizedBox(width: 10),
+                                      InkWell(
+                                        child: Icon(Icons.delete_outline, size: 20, color:Colors.grey),
+                                        onTap: () {
+
+                                        },
+                                      ),
+//                                      IconButton(icon: Icon(Icons.create), iconSize: 20,),
+//                                      IconButton(icon: Icon(Icons.delete_outline), iconSize: 20,),
+                                    ],
                                   ),
                                   SizedBox(height: 15),
                                   Text("Time:     " + record.time.toDate().toString().substring(11,13) + "시  " +
@@ -119,19 +159,19 @@ class _PlanState extends State<Plan> {
                                   Row(
                                     children: [
                                       SizedBox(width: 300),
-                                      InkWell(
-                                          child: Text(
-                                            "more",
-                                            style: TextStyle(fontSize: 12, color: Colors.indigo),
-                                          ),
-                                          onTap: () {
-                                            Navigator.push(
-                                              context,
-                                              MaterialPageRoute(
-                                                builder: (context) => PlanDetailPage(),
-                                              ),
-                                            );
-                                          })
+//                                      InkWell(
+//                                          child: Text(
+//                                            "more",
+//                                            style: TextStyle(fontSize: 12, color: Colors.indigo),
+//                                          ),
+//                                          onTap: () {
+//                                            Navigator.push(
+//                                              context,
+//                                              MaterialPageRoute(
+//                                                builder: (context) => PlanDetailPage(),
+//                                              ),
+//                                            );
+//                                          })
                                     ],
                                   )
                                 ],
