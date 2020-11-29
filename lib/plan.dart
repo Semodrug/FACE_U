@@ -19,44 +19,44 @@ class _PlanState extends State<Plan> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        floatingActionButton: FloatingActionButton(
-            onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => PlanAddPage(),
-                ),
-              );
-            },
-            child: Icon(Icons.add_circle, size: 40),
-            backgroundColor: purple3
-        ),
-        body: Padding(
-          padding: const EdgeInsets.all(10.0),
-          child: Column(
-            mainAxisSize: MainAxisSize.max,
-            children: [
-              SearchBar(),
-              Row(
-                children: <Widget>[
-                  SizedBox(width:15),
-                  Text('Plans'),// theme 추가
-                  ButtonTheme(
-                    minWidth: 10,
-                    height: 22,
-                    child: FlatButton(
-                      child: Text(
-                        "32",
-                        style: TextStyle(color: Colors.teal[400], fontSize: 12.0),
-                      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => PlanAddPage(),
+            ),
+          );
+        },
+        child: Icon(Icons.add_circle, size: 40),
+        backgroundColor: purple3
+      ),
+      body: Padding(
+        padding: const EdgeInsets.all(10.0),
+        child: Column(
+          mainAxisSize: MainAxisSize.max,
+          children: [
+            SearchBar(),
+            Row(
+              children: <Widget>[
+                SizedBox(width:15),
+                Text('Plans'),// theme 추가
+                ButtonTheme(
+                  minWidth: 10,
+                  height: 22,
+                  child: FlatButton(
+                    child: Text(
+                      "32",
+                      style: TextStyle(color: Colors.teal[400], fontSize: 12.0),
                     ),
                   ),
-                ],
-              ),
-              _buildCards()
-            ],
-          ),
-        )
+                ),
+              ],
+            ),
+            _buildCards()
+          ],
+        ),
+      )
     );
   }
 
@@ -129,7 +129,8 @@ class _PlanState extends State<Plan> {
                                   SizedBox(height: 15),
                                   Text("Time:     " + record.time.toDate().toString().substring(11,13) + "시  " +
                                       record.time.toDate().toString().substring(17,19) + "분  " ,
-                                      style: Theme.of(context).textTheme.bodyText1),
+
+                                     style: Theme.of(context).textTheme.bodyText1),
                                   Text("Place:    " + record.place.toString(),
                                       style: Theme.of(context).textTheme.bodyText1),
                                   Text("Memo:  " + record.memo,maxLines: 1,
@@ -188,7 +189,6 @@ class _PlanState extends State<Plan> {
     );
   }
 }
-
 
 
 

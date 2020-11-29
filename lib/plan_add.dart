@@ -89,28 +89,27 @@ class _PlanAddPageState extends State<PlanAddPage> {
 
     return Scaffold(
       appBar: AppBar(
-          backgroundColor: Theme.of(context).primaryColor,
-          title: Text("약속 등록하기", style: Theme.of(context).textTheme.headline1),
-          actions: <Widget> [
-            Container(
-              padding: EdgeInsets.symmetric(vertical: 14, horizontal: 15),
-              width: 70,
-              height: 20,
-              child: InkWell(
-                  child: Text("완료", style: TextStyle(fontSize: 18)),
-                  onTap: () {
-                    plans.add({
+        backgroundColor: Theme.of(context).primaryColor,
+        title: Text("약속 등록하기", style: Theme.of(context).textTheme.headline1),
+        actions: <Widget> [
+          Container(
+            padding: EdgeInsets.symmetric(vertical: 14, horizontal: 15),
+            width: 70,
+            height: 20,
+            child: InkWell(
+              child: Text("완료", style: TextStyle(fontSize: 18)),
+              onTap: () {
+                plans.add({
 //                  'time': date,
-                      'time': time,
-                      'place': "new",
-                      'memo': "new",
-                      'withWhom': "양은영"
-                    });
-
-                  }
-              ),
-            )
-          ]
+                  'time': time,
+                  'place': "new",
+                  'memo': "new",
+                  'withWhom': "양은영"
+                });
+              }
+            ),
+          )
+        ]
       ),
 
       body: Padding(
@@ -242,4 +241,5 @@ class _PlanAddPageState extends State<PlanAddPage> {
       ),
     );
   }
+
 }
