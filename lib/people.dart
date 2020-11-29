@@ -211,13 +211,13 @@ class _SearchBarState extends State<SearchBar> {
             ),
           ),
         ),
-        SizedBox(
-          width: 10,
-        ),
+//        SizedBox(
+//          width: 10,
+//        ),
         Container(
             margin: EdgeInsets.only(top: 11),
             height: 33,
-            width: 65,
+            width: 60,
             child: FlatButton(
               child: Text(
                   '확인', style: Theme.of(context).textTheme.bodyText2             ),

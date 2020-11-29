@@ -1,3 +1,4 @@
+/*
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:face_u/people.dart';
 import 'package:flutter/material.dart';
@@ -139,3 +140,4 @@ class _PlanState extends State<Plan> {
     );
   }
 }
+*/

@@ -3,14 +3,15 @@ import 'package:flutter/material.dart';
 import 'camera.dart';
 import 'login.dart';
 import 'home.dart';
-
+import 'detail.dart';
 import 'add.dart';
-import 'plan.dart';
+//import 'plan.dart';
 import 'recognition.dart';
 import 'result.dart';
 
 class FaceUApp extends StatelessWidget {
   Color color = const Color(0xffFFdb80);
+  //final String doc_id = 'default';
 
   @override
   Widget build(BuildContext context) {
@@ -25,9 +26,10 @@ class FaceUApp extends StatelessWidget {
           '/home': (context) => HomePage(),
           '/add': (context) => AddPage(),
           '/recognition': (context) => Recognition(),
-          '/plan': (context) => Plan(),
+          //'/plan': (context) => Plan(),
           '/camera': (context) => Camera(),
           '/result': (context) => ResultPage(),
+          //'/detail': (context) => Detail(doc_id),
         },
         theme: ThemeData(
           primaryColor: Color(0xffFFdb80),
