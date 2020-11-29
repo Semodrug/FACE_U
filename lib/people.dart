@@ -1,9 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-
 import 'package:flutter/material.dart';
-
-import 'camera.dart';
-import 'route.dart';
+import 'detail.dart';
 
 class PeoplePage extends StatefulWidget {
   @override
@@ -12,23 +9,45 @@ class PeoplePage extends StatefulWidget {
 
 class _PeoplePageState extends State<PeoplePage> {
   final num = 32; // streambuilder 로 불러오기
-  String _filterOrSort = "이름순"; //추가
-  Query query = FirebaseFirestore.instance.collection('product');
+  String _filterOrSort = "asc";
+
+
+
+/*
+  final _valueList = [ '그룹순', '이름순'];
+  var _selectedValue = "이름순";
+  bool isDescending = false;
+*/
+  CollectionReference person_data = FirebaseFirestore.instance.collection('Persons');
 
   @override
   Widget build(BuildContext context) {
+    ///sumi
+    Query query = FirebaseFirestore.instance.collection('Persons');
+
+    switch (_filterOrSort) {
+      case "asc":
+        query = query.orderBy('name', descending: false);
+        break;
+
+      case "desc":
+        query = query.orderBy('name', descending: true);
+        break;
+    }
+
+    Stream<QuerySnapshot> data = query.snapshots();
+    ///
+
     return Scaffold(
-      body: _buildBody(context),
+      body: _buildBody(context, data),
       floatingActionButton: FloatingActionButton(
         backgroundColor: Theme.of(context).primaryColor,
         child: Icon(Icons.add),
         onPressed: () {
-          print('move to add page');
           Navigator.pushNamed(context, '/add');
         },
       ),
       //TODO: floating button presse 하면 Addpage
-
     );
   }
 
@@ -55,51 +74,73 @@ class _PeoplePageState extends State<PeoplePage> {
           ),
         ),
         SizedBox(width: 220),
-        DropdownButton<String>(
-          value: _filterOrSort,
-          icon: Icon(Icons.keyboard_arrow_down),
-          iconSize: 24,
-          elevation: 16,
-          style: TextStyle(color: Colors.black),
-          underline: Container(
-            height: 2,
-            color: Colors.grey,
-          ),
-          onChanged: (String _filterOrSort) async {
-            await _onActionSelected(_filterOrSort);
-          },
-
-          items: <String>['이름순', '등록순']
-              .map<DropdownMenuItem<String>>((String value) {
-            return DropdownMenuItem<String>(
+        /*
+        DropdownButton (
+          value: _selectedValue,
+          items: _valueList.map((value) {
+            return DropdownMenuItem(
               value: value,
               child: Text(value),
             );
           }).toList(),
-          //);
+          onChanged: (String value) {
+            setState(() {
+              _selectedValue = value;
+              isDescending = !isDescending;
+            });
+          },
+          icon: Icon(Icons.arrow_drop_down),
+          iconSize: 24,
+          elevation: 16,
+          style: TextStyle(color: Colors.black87),
+          iconEnabledColor: Colors.grey,
         ),
-
+        */
+        ///sumi
+        DropdownButton<String>(
+          value: _filterOrSort,
+          icon: Icon(Icons.arrow_drop_down),
+          iconSize: 24,
+          elevation: 16,
+          style: TextStyle(color: Colors.black),
+          underline: Container(
+            height: 1,
+            color: Colors.black12,
+          ),
+          onChanged: (String newValue) {
+            setState(() {
+              _filterOrSort = newValue;
+            });
+          },
+          items: <String>['asc', 'desc']
+              .map<DropdownMenuItem<String>>((String value) {
+            return DropdownMenuItem<String>(
+              value: value,
+              child: Text(value.toUpperCase()),
+            );
+          }).toList(),
+        ),
+        ///
       ],
     );
   }
 
-  Widget _buildBody(BuildContext context){
-    print("        _buildBody");
-
+  Widget _buildBody(BuildContext context, Stream<QuerySnapshot> data) {
     return StreamBuilder<QuerySnapshot>(
-        stream: Firestore.instance.collection('Persons').snapshots(),
-        builder: (context, stream){
+        //stream: Firestore.instance.collection('Persons').snapshots(),
+        ///sumi
+        stream: data,
+        //stream: person_data.orderBy('name', descending: isDescending).snapshots(),
+
+        builder: (context, stream) {
           if (!stream.hasData) return LinearProgressIndicator();
 
           return _buildList(context, stream.data.docs);
-        }
-    );
+        });
   }
 
-  Widget _buildList(BuildContext context, List<DocumentSnapshot> snapshot){
-    print("        _buildList");
-
-    return   Column(
+  Widget _buildList(BuildContext context, List<DocumentSnapshot> snapshot) {
+    return Column(
       children: [
         SearchBar(),
         _countDrowpdown(context, num),
@@ -118,23 +159,19 @@ class _PeoplePageState extends State<PeoplePage> {
     );
   }
 
-  Widget _buildListItem(BuildContext context, DocumentSnapshot data){
-    print("        _buildListItem");
-
+  Widget _buildListItem(BuildContext context, DocumentSnapshot data) {
     final person = Persons.fromSnapshot(data);
     String docID = data.id;
 
-    return ListCards(person.name, person.relation, person.image);
+    return ListCards(person.name, person.relation, person.image, docID);
   }
-
-
-//TODO: List View Card 로 불러줘도 될 듯
+/*
+  //TODO: Query 사용하기
   void _onActionSelected(String value) async {
     if (value == "이름순") {
       WriteBatch batch = FirebaseFirestore.instance.batch();
 
       await query.get().then((querySnapshot) async {
-
         await batch.commit();
 
         setState(() {
@@ -148,11 +185,13 @@ class _PeoplePageState extends State<PeoplePage> {
     }
   }
 
+  */
 }
+
 class Persons {
   final String name;
   final String image;
-  final List <dynamic> features;
+  final List<dynamic> features;
   final String relation;
   final String group;
 
@@ -176,7 +215,6 @@ class Persons {
 //@override
 //String toString() => "Record<$name:$like:$price:$explain:$image>";
 }
-
 
 class SearchBar extends StatefulWidget {
   @override
@@ -211,16 +249,15 @@ class _SearchBarState extends State<SearchBar> {
             ),
           ),
         ),
-//        SizedBox(
-//          width: 10,
-//        ),
+        SizedBox(
+          width: 10,
+        ),
         Container(
             margin: EdgeInsets.only(top: 11),
             height: 33,
-            width: 60,
+            width: 65,
             child: FlatButton(
-              child: Text(
-                  '확인', style: Theme.of(context).textTheme.bodyText2             ),
+              child: Text('확인', style: Theme.of(context).textTheme.bodyText2),
               onPressed: () {},
             ))
       ],
@@ -232,11 +269,13 @@ class ListCards extends StatefulWidget {
   final String name;
   final String relationship;
   final String image;
+  final String id;
 
   const ListCards(
       this.name,
       this.relationship,
-      this.image, {
+      this.image,
+      this.id, {
         Key key,
       }) : super(key: key);
 
@@ -251,21 +290,29 @@ class _ListCardsState extends State<ListCards> {
         width: 390,
         height: 110,
         child: Card(
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: <Widget>[
-              ListTile(
-                leading: Container(
-                  width:84,
-                  height: 84,
-                  child:
-                  Image.network(widget.image),
-                ),
-                title: Text("이름 : ${widget.name}", style: Theme.of(context).textTheme.bodyText1),
-                subtitle: Text("관계 : ${widget.relationship}", style: Theme.of(context).textTheme.bodyText2),
-              ),
-            ],
-          ),
-        ));
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: <Widget>[
+                ListTile(
+                  leading: Container(
+                    width: 84,
+                    height: 84,
+                    child: Image.network(widget.image),
+                  ),
+                  title: Text("이름 : ${widget.name}",
+                      style: Theme.of(context).textTheme.bodyText1),
+                  subtitle: Text("관계 : ${widget.relationship}",
+                      style: Theme.of(context).textTheme.bodyText2),
+                  onTap: (){
+                    print('DOC ID ==> ${widget.id}');
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (BuildContext context) => Detail(widget.id),
+                      ),
+                    );               },
+                )
+              ],
+            )));
   }
 }
