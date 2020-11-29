@@ -65,7 +65,7 @@ class _PlanState extends State<Plan> {
   Widget _buildCards() {
     return Expanded(
         child: StreamBuilder<QuerySnapshot>(
-            stream: FirebaseFirestore.instance.collection("Users").doc("yey0811").collection("Plans").snapshots(),
+            stream: FirebaseFirestore.instance.collection("Users").doc("yey0811").collection("Plans").orderBy("place", descending: true).snapshots(),
 //            stream: FirebaseFirestore.instance.collection("Users").orderBy("price").snapshots(),
 //            stream: items.item.orderBy("price", descending: isDescending).snapshots(),
             builder: (BuildContext context,

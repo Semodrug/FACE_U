@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:date_format/date_format.dart';
 import 'package:intl/intl.dart';
@@ -20,7 +21,7 @@ class _PlanAddPageState extends State<PlanAddPage> {
   String _setTime, _setDate;
   String _hour, _minute, _time;
   String dateTime;
-  DateTime date;
+  DateTime date, time;
   DateTime selectedDate = DateTime.now();
   TimeOfDay selectedTime = TimeOfDay(hour: 00, minute: 00);
   TextEditingController _dateController = TextEditingController();
@@ -46,9 +47,16 @@ class _PlanAddPageState extends State<PlanAddPage> {
       context: context,
       initialTime: selectedTime,
     );
+//    final DateTime pickedtime = await showDatePicker(
+//        context: context,
+//        initialDate: selectedDate,
+//        initialDatePickerMode: DatePickerMode.day,
+//        firstDate: DateTime(2015),
+//        lastDate: DateTime(2101));
     if (picked != null)
       setState(() {
         selectedTime = picked;
+//        time = picked;
         _hour = selectedTime.hour.toString();
         _minute = selectedTime.minute.toString();
         _time = _hour + ' : ' + _minute;
@@ -56,6 +64,9 @@ class _PlanAddPageState extends State<PlanAddPage> {
         _timeController.text = formatDate(
             DateTime(2019, 08, 1, selectedTime.hour, selectedTime.minute),
             [hh, ':', nn, " ", am]).toString();
+        time = formatDate(
+            DateTime(2019, 08, 1, selectedTime.hour, selectedTime.minute),
+            [hh, ':', nn, " ", am]) as DateTime;
       });
   }
 
@@ -71,9 +82,11 @@ class _PlanAddPageState extends State<PlanAddPage> {
 
   @override
   Widget build(BuildContext context) {
+    CollectionReference plans = FirebaseFirestore.instance.collection("Users").doc("yey0811").collection("Plans");
     _height = MediaQuery.of(context).size.height;
     _width = MediaQuery.of(context).size.width;
     dateTime = DateFormat.yMd().format(DateTime.now());
+
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Theme.of(context).primaryColor,
@@ -85,7 +98,16 @@ class _PlanAddPageState extends State<PlanAddPage> {
             height: 20,
             child: InkWell(
               child: Text("완료", style: TextStyle(fontSize: 18)),
-              onTap: () {}
+              onTap: () {
+                plans.add({
+//                  'time': date,
+                  'time': time,
+                  'place': "new",
+                  'memo': "new",
+                  'withWhom': "양은영"
+                });
+
+              }
             ),
           )
         ]
@@ -151,11 +173,8 @@ class _PlanAddPageState extends State<PlanAddPage> {
                         letterSpacing: 0.5),),
                   SizedBox(width: 85),
                   Container(
-//                    margin: EdgeInsets.only(top: 30),
                     width: _width / 3.3,
                     height: _height / 15.5,
-//                    alignment: Alignment.center,
-//                    decoration: BoxDecoration(color: Colors.grey[200]),
                     child: TextFormField(
                       style: TextStyle(fontSize: 16),
                       textAlign: TextAlign.center,
@@ -168,7 +187,6 @@ class _PlanAddPageState extends State<PlanAddPage> {
                       decoration: InputDecoration(
                           disabledBorder:
                           UnderlineInputBorder(borderSide: BorderSide.none),
-                          // labelText: 'Time',
                           contentPadding: EdgeInsets.all(5)),
                     ),
                   ),
@@ -210,8 +228,6 @@ class _PlanAddPageState extends State<PlanAddPage> {
 //                        fontStyle: FontStyle.italic,
                     fontWeight: FontWeight.w800,
                     letterSpacing: 0.5),),
-
-
               TextField(
                 controller: _descriptionCtl,
                 decoration: InputDecoration(
