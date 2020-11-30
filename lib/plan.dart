@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'plan_add.dart';
 import 'plan_edit.dart';
 
+String id;
+
 class Plan extends StatefulWidget {
   @override
   _PlanState createState() => _PlanState();
@@ -11,7 +13,6 @@ class Plan extends StatefulWidget {
 class _PlanState extends State<Plan> {
   Color purple2 = const Color(0xffF1E7FF);
   Color purple3 = const Color(0xffC5B0E1);
-
 
   @override
   Widget build(BuildContext context) {
@@ -104,6 +105,7 @@ class _PlanState extends State<Plan> {
                                       InkWell(
                                         child: Icon(Icons.create, size: 20, color:Colors.grey),
                                         onTap: () {
+                                          id = record.reference.id.toString();
                                           Navigator.push(context, MaterialPageRoute(
                                               builder: (context) => EditPlanPage()
                                           )) ;
@@ -112,7 +114,6 @@ class _PlanState extends State<Plan> {
                                       IconButton(
                                         icon: Icon(Icons.delete_outline, size: 20, color:Colors.grey),
                                         onPressed: () {
-
                                           record.reference.delete();
                                         },
                                       ),
