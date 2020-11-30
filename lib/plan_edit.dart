@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 
-class PlanDetailPage extends StatefulWidget {
+class EditPlanPage extends StatefulWidget {
   @override
-  _PlanDetailPageState createState() => _PlanDetailPageState();
+  EditPlanPageState createState() => EditPlanPageState();
 }
 
-class _PlanDetailPageState extends State<PlanDetailPage> {
+class EditPlanPageState extends State<EditPlanPage> {
 
   @override
   Widget build(BuildContext context) {

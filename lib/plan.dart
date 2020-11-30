@@ -1,10 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:face_u/people.dart';
 import 'package:flutter/material.dart';
-
-import 'demo.dart';
 import 'plan_add.dart';
-import 'plan_detail.dart';
+import 'plan_edit.dart';
 
 class Plan extends StatefulWidget {
   @override
@@ -77,7 +74,7 @@ class _PlanState extends State<Plan> {
               return GridView.count(
                   crossAxisCount: 1,
                   padding: EdgeInsets.all(10.0),
-                  childAspectRatio: 8.0 / 6.4,
+                  childAspectRatio: 8.0 / 6.8,
                   children: snapshot.data.docs.map((DocumentSnapshot data) {
                     var record = Record.fromSnapshot(data);
                     return Card(
@@ -99,37 +96,30 @@ class _PlanState extends State<Plan> {
                                         decoration: BoxDecoration(
                                           color: purple2,
                                           borderRadius: BorderRadius.all(Radius.circular(5)),),
-                                        child: Text(record.time.toDate().toString().substring(0,4) + "년 " +
-                                            record.time.toDate().toString().substring(5,7)+ "월  " +
-                                            record.time.toDate().toString().substring(8,11) + "일 " ,
+//                                          child: Text(record.date.toString())
+                                        child: Text(record.date.toString() ,
                                             style: Theme.of(context).textTheme.bodyText1),
                                       ),
-                                      SizedBox(width: 152),
+                                      SizedBox(width: 140),
                                       InkWell(
                                         child: Icon(Icons.create, size: 20, color:Colors.grey),
                                         onTap: () {
                                           Navigator.push(context, MaterialPageRoute(
-//                                            builder: (context) => PlanDetailPage()
-                                              builder: (context) => DateTimePicker()
-
+                                              builder: (context) => EditPlanPage()
                                           )) ;
                                         },
                                       ),
-                                      SizedBox(width: 10),
-                                      InkWell(
-                                        child: Icon(Icons.delete_outline, size: 20, color:Colors.grey),
-                                        onTap: () {
+                                      IconButton(
+                                        icon: Icon(Icons.delete_outline, size: 20, color:Colors.grey),
+                                        onPressed: () {
 
+                                          record.reference.delete();
                                         },
                                       ),
-//                                      IconButton(icon: Icon(Icons.create), iconSize: 20,),
-//                                      IconButton(icon: Icon(Icons.delete_outline), iconSize: 20,),
                                     ],
                                   ),
                                   SizedBox(height: 15),
-                                  Text("Time:     " + record.time.toDate().toString().substring(11,13) + "시  " +
-                                      record.time.toDate().toString().substring(17,19) + "분  " ,
-
+                                  Text("Time:     " + record.time,
                                      style: Theme.of(context).textTheme.bodyText1),
                                   Text("Place:    " + record.place.toString(),
                                       style: Theme.of(context).textTheme.bodyText1),
@@ -188,6 +178,10 @@ class _PlanState extends State<Plan> {
         )
     );
   }
+
+
+  
+
 }
 
 
@@ -195,17 +189,20 @@ class _PlanState extends State<Plan> {
 class Record {
   final DocumentReference reference;
 
-  var time;
+  final String date;
+  final String time;
   final String place;
   final String memo;
   final String withWhom;
 
   Record.fromMap(Map<String, dynamic> map, {this.reference})
-      : assert(map['time'] != null),
+      : assert(map['date'] != null),
+        assert(map['time'] != null),
         assert(map['place'] != null),
         assert(map['memo'] != null),
         assert(map['withWhom'] != null),
 
+        date = map['date'],
         time = map['time'],
         place = map['place'],
         memo = map['memo'],
@@ -213,5 +210,55 @@ class Record {
 
   Record.fromSnapshot(DocumentSnapshot snapshot)
       : this.fromMap(snapshot.data(), reference: snapshot.reference);
+}
 
+
+
+class SearchBar extends StatefulWidget {
+  @override
+  _SearchBarState createState() => _SearchBarState();
+}
+
+class _SearchBarState extends State<SearchBar> {
+  @override
+  Widget build(BuildContext context) {
+    //이 search bar에서 바로 검색을 하게 할 것인가?
+    return Row(
+      children: <Widget>[
+        Container(
+          width: 315,
+          height: 33,
+          padding: EdgeInsets.only(left: 20, right: 30),
+          margin: EdgeInsets.fromLTRB(15, 11, 0, 0),
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.all(Radius.circular(8.0)),
+            color: Colors.grey[200],
+          ),
+          child: TextField(
+            cursorColor: Colors.black,
+            decoration: InputDecoration(
+              icon: Icon(Icons.search, size: 20),
+              hintText: "사람의 이름, 특징을 검색해보세요 ",
+              //hintStyle: TextStyle(fontSize: 13.0, color: Colors.grey),
+              hintStyle: Theme.of(context).textTheme.bodyText2,
+              disabledBorder: InputBorder.none,
+              focusedBorder: InputBorder.none,
+              enabledBorder: InputBorder.none,
+            ),
+          ),
+        ),
+        SizedBox(
+          width: 5,
+        ),
+        Container(
+            margin: EdgeInsets.only(top: 11),
+            height: 33,
+            width: 55,
+            child: FlatButton(
+              child: Text('확인', style: Theme.of(context).textTheme.bodyText2),
+              onPressed: () {},
+            ))
+      ],
+    );
+  }
 }

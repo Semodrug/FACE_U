@@ -13,8 +13,9 @@ class _PlanAddPageState extends State<PlanAddPage> {
   Color purple3 = const Color(0xffC5B0E1);
   DateTime _checkInTime;
   String _selectedTime;
-  TextEditingController _priceCtl = TextEditingController();
-  TextEditingController _descriptionCtl = TextEditingController();
+  TextEditingController _memoCtr = TextEditingController();
+  TextEditingController _placeCtr = TextEditingController();
+  TextEditingController _withCtr = TextEditingController();
 
   double _height;
   double _width;
@@ -47,12 +48,6 @@ class _PlanAddPageState extends State<PlanAddPage> {
       context: context,
       initialTime: selectedTime,
     );
-//    final DateTime pickedtime = await showDatePicker(
-//        context: context,
-//        initialDate: selectedDate,
-//        initialDatePickerMode: DatePickerMode.day,
-//        firstDate: DateTime(2015),
-//        lastDate: DateTime(2101));
     if (picked != null)
       setState(() {
         selectedTime = picked;
@@ -101,10 +96,13 @@ class _PlanAddPageState extends State<PlanAddPage> {
               onTap: () {
                 plans.add({
 //                  'time': date,
-                  'time': time,
-                  'place': "new",
-                  'memo': "new",
-                  'withWhom': "양은영"
+                  'date': DateFormat.yMd().format(selectedDate),
+                  'time': formatDate(
+                      DateTime(2019, 08, 1, selectedTime.hour, selectedTime.minute),
+                      [hh, ':', nn, " ", am]),
+                  'place': _placeCtr.text,
+                  'memo': _memoCtr.text,
+                  'withWhom': _withCtr.text
                 });
               }
             ),
@@ -126,7 +124,7 @@ class _PlanAddPageState extends State<PlanAddPage> {
                         fontSize: 17,
                         color: Colors.black87,
                         fontWeight: FontWeight.w800,
-                        letterSpacing: 0.5),),
+                        letterSpacing: 0.5)),
                   SizedBox(width: 90),
                   Container(
                     width: _width / 3.3,
@@ -203,6 +201,20 @@ class _PlanAddPageState extends State<PlanAddPage> {
                 ],
               ),
               SizedBox(height: 25),
+              Text("Memo",
+                style: TextStyle(
+                    fontSize: 17,
+                    color: Colors.black87,
+//                        fontStyle: FontStyle.italic,
+                    fontWeight: FontWeight.w800,
+                    letterSpacing: 0.5)),
+              TextField(
+                controller: _memoCtr,
+                decoration: InputDecoration(
+                  hintText: '메모를 등록해주세요',
+                ),
+              ),
+              SizedBox(height: 30),
               Text("Place",
 //                    style: Theme.of(context).textTheme.headline1,
                 style: TextStyle(
@@ -212,7 +224,7 @@ class _PlanAddPageState extends State<PlanAddPage> {
                     fontWeight: FontWeight.w800,
                     letterSpacing: 0.5),),
               TextField(
-                controller: _priceCtl,
+                controller: _placeCtr,
                 decoration: InputDecoration(
                   hintText: '장소를 등록해주세요',
                   // hintStyle: TextStyle(color: Colors.blue[700])
@@ -228,8 +240,9 @@ class _PlanAddPageState extends State<PlanAddPage> {
                     fontWeight: FontWeight.w800,
                     letterSpacing: 0.5),),
               TextField(
-                controller: _descriptionCtl,
+                controller: _withCtr,
                 decoration: InputDecoration(
+                  hintText: '함께할 사람을 등록해주세요',
                 ),
               ),
               SizedBox(
@@ -241,5 +254,7 @@ class _PlanAddPageState extends State<PlanAddPage> {
       ),
     );
   }
-
 }
+
+
+
