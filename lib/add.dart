@@ -1,17 +1,98 @@
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
+import 'dart:io';
+
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
+import 'package:image_picker/image_picker.dart';
 
 class AddPage extends StatefulWidget {
   @override
   _AddPageState createState() => _AddPageState();
 }
 
+// 0. auth 먼저 하고
+// TODO: 1. image picker & Firestore 와 연결 ==> error check 만 하면 된다!
+// TODO: 2. + 버튼 누르면 더 적을 수 있게 칸이 바로바로 더 생겨야한다
+// TODO: 3. 사진 한장 말고 여러장으로/ 사진첩에서 말고 카메라도 가능하게
+
+// Firestore 연
+
 class _AddPageState extends State<AddPage> {
+  File _image;
+  String currentUrl;
+  final picker = ImagePicker();
+  bool saved = false;
+  FirebaseAuth auth = FirebaseAuth.instance;
+
   @override
   Widget build(BuildContext context) {
     TextEditingController _nameCtl = TextEditingController();
-    TextEditingController _priceCtl = TextEditingController();
-    TextEditingController _descriptionCtl = TextEditingController();
-    TextEditingController _characterCtl = TextEditingController();
+    TextEditingController _relationCtl = TextEditingController();
+    TextEditingController _groupCtl = TextEditingController();
+    TextEditingController _featureCtl = TextEditingController();
+
+    CollectionReference people = FirebaseFirestore.instance
+        .collection('Users')
+        .doc(auth.currentUser.uid)
+        .collection('People');
+
+    List<dynamic> emptyList = [];
+
+    Future<String> uploadFile(File file) async {
+      String currUrl;
+      //TODO: check error
+
+      Reference imageRef = FirebaseStorage.instance.ref().child(_nameCtl.text);
+
+      //UploadTask currentTask = await imageRef.putFile(file);
+      UploadTask currentTask = imageRef.putFile(file);
+
+      print("saved successfully: [image from image picker]");
+
+      await currentTask.whenComplete(() async {
+        currUrl = await imageRef.getDownloadURL();
+
+        saved = true;
+
+        return currUrl;
+      });
+    }
+
+    //String currUrl
+    Future<void> addProduct() async {
+      try {
+        assert(_nameCtl.text != null);
+        assert(_relationCtl.text != null);
+        // assert(_descriptionCtl.text != null);
+
+        people.add({
+          'name': _nameCtl.text,
+          'relation': _relationCtl.text,
+          'group': _groupCtl.text,
+          'feature': _featureCtl.text,
+          //'url': currUrl
+        });
+
+        print(
+            "saved successfully: [${_nameCtl.text}-${_relationCtl.text}-${_groupCtl.text}]");
+
+        // "saved successfully: [${_nameCtl.text}-${_relationCtl.text}-${_groupCtl.text}-$currUrl]");
+      } catch (e) {
+        print('Error: $e');
+      }
+    }
+
+    void getImage() async {
+      final PickedFile picked =
+          await picker.getImage(source: ImageSource.gallery);
+
+      if (picked == null) return;
+      setState(() {
+        _image = File(picked.path);
+      });
+    }
 
     return Scaffold(
       appBar: AppBar(
@@ -48,11 +129,11 @@ class _AddPageState extends State<AddPage> {
               //   Scaffold.of(context).showSnackBar(
               //       SnackBar(content: Text('You can only do it once !!')));
               // } else {
-              //   currentUrl = await uploadFile(_image);
-              //   addProduct(currentUrl);
-              //
-              //   Navigator.pushReplacementNamed(context, '/home');
-              // }
+              //currentUrl = await uploadFile(_image);
+              addProduct();
+
+              Navigator.pushReplacementNamed(context, '/home');
+              //}
             },
           ),
         ],
@@ -72,8 +153,9 @@ class _AddPageState extends State<AddPage> {
                       shape: BoxShape.circle,
                       image: DecorationImage(
                           fit: BoxFit.fill,
-                          image: NetworkImage(
-                              "https://i.imgur.com/BoN9kdC.png")))),
+                          image: _image == null
+                              ? NetworkImage("https://i.imgur.com/BoN9kdC.png")
+                              : FileImage(_image)))),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
@@ -81,7 +163,7 @@ class _AddPageState extends State<AddPage> {
                     child: Text(
                       '사진 추가',
                     ),
-                    onPressed: () => null,
+                    onPressed: () => getImage(),
                     textColor: Colors.blue,
                   ),
                 ],
@@ -98,16 +180,16 @@ class _AddPageState extends State<AddPage> {
                 ),
               ), // border: OutlineInputBorder()
               TextField(
-                controller: _priceCtl,
+                controller: _relationCtl,
                 decoration: InputDecoration(
-                  hintText: '소속을 입력해주세요 (가족, 친구, 직장 등)',
+                  hintText: '관계를 입력해주세요 (엄마, 대학친구, 상사 등)',
                   // hintStyle: TextStyle(color: Colors.blue[700])
                 ),
               ),
               TextField(
-                controller: _descriptionCtl,
+                controller: _groupCtl,
                 decoration: InputDecoration(
-                  hintText: '관계를 입력해주세요 (엄마, 대학친구, 상사 등)',
+                  hintText: '소속을 입력해주세요 (가족, 친구, 직장 등)',
                   // hintStyle: TextStyle(color: Colors.blue[700])
                 ),
               ),
@@ -115,7 +197,7 @@ class _AddPageState extends State<AddPage> {
                 height: 20,
               ),
               TextField(
-                controller: _characterCtl,
+                controller: _featureCtl,
                 decoration: InputDecoration(
                   hintText: '특징을 입력해주세요',
                   // hintStyle: TextStyle(color: Colors.blue[700])
