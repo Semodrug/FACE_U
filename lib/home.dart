@@ -14,7 +14,7 @@ class _HomePageState extends State<HomePage> {
   final List<Widget> _widgetOptions = [
     PeoplePage(),
     Camera(),
-    //Plan()
+    Plan()
   ];
 
   void _onItemTapped(int index) {
