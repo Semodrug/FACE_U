@@ -20,9 +20,9 @@ class FaceUApp extends StatelessWidget {
         home: HomePage(), //HomePage
 //        initialRoute: '/login',
 //        initialRoute: '/home',
-        initialRoute: '/home',
+        initialRoute: '/login',
         routes: {
-          '/login': (context) => LogInPage(),
+          '/login': (context) => LoginPage(),
           '/home': (context) => HomePage(),
           '/add': (context) => AddPage(),
           '/recognition': (context) => Recognition(),
@@ -72,7 +72,7 @@ class FaceUApp extends StatelessWidget {
 
     return MaterialPageRoute<void>(
       settings: settings,
-      builder: (BuildContext context) => LogInPage(),
+      builder: (BuildContext context) => LoginPage(),
       fullscreenDialog: true,
     );
   }
