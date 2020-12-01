@@ -30,7 +30,7 @@ class _DetailState extends State<Detail> {
 
   Widget _buildBody(BuildContext context) {
     return StreamBuilder<DocumentSnapshot>(
-        stream: Firestore.instance.collection('Persons').doc(widget.id).snapshots(),
+        stream: FirebaseFirestore.instance.collection('Users').doc(auth_id).collection('People').doc(widget.id).snapshots(),
         builder: (context, stream){
           if (!stream.hasData) return LinearProgressIndicator();
             print(widget.id);

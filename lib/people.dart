@@ -1,36 +1,47 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:face_u/search_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'detail.dart';
+
+final FirebaseAuth _auth = FirebaseAuth.instance;
+final String auth_id = _auth.currentUser.uid;
 
 class PeoplePage extends StatefulWidget {
   @override
   _PeoplePageState createState() => _PeoplePageState();
 }
 
+
+
 class _PeoplePageState extends State<PeoplePage> {
   final num = 32; // streambuilder 로 불러오기
-  String _filterOrSort = "asc";
-
-
-
+  String _filterOrSort = "이름순";
 /*
-  final _valueList = [ '그룹순', '이름순'];
-  var _selectedValue = "이름순";
-  bool isDescending = false;
+  final TextEditingController _filter = TextEditingController();
+  FocusNode focusNode = FocusNode();
+  String _searchText = "";
+
+  _PeoplePageState() {
+    _filter.addListener(() {
+      setState(() {
+        _searchText = _filter.text;
+      });
+    });
+  }
 */
-  CollectionReference person_data = FirebaseFirestore.instance.collection('Persons');
 
   @override
   Widget build(BuildContext context) {
     ///sumi
-    Query query = FirebaseFirestore.instance.collection('Persons');
+    Query query = FirebaseFirestore.instance.collection('Users').doc(auth_id).collection('People');
 
     switch (_filterOrSort) {
-      case "asc":
+      case "이름순":
         query = query.orderBy('name', descending: false);
         break;
 
-      case "desc":
+      case "그룹순":
         query = query.orderBy('name', descending: true);
         break;
     }
@@ -112,7 +123,7 @@ class _PeoplePageState extends State<PeoplePage> {
               _filterOrSort = newValue;
             });
           },
-          items: <String>['asc', 'desc']
+          items: <String>['이름순', '그룹순']
               .map<DropdownMenuItem<String>>((String value) {
             return DropdownMenuItem<String>(
               value: value,
@@ -127,8 +138,8 @@ class _PeoplePageState extends State<PeoplePage> {
 
   Widget _buildBody(BuildContext context, Stream<QuerySnapshot> data) {
     return StreamBuilder<QuerySnapshot>(
-        //stream: Firestore.instance.collection('Persons').snapshots(),
-        ///sumi
+      //stream: Firestore.instance.collection('Persons').snapshots(),
+      ///sumi
         stream: data,
         //stream: person_data.orderBy('name', descending: isDescending).snapshots(),
 
@@ -140,9 +151,18 @@ class _PeoplePageState extends State<PeoplePage> {
   }
 
   Widget _buildList(BuildContext context, List<DocumentSnapshot> snapshot) {
+    /*
+    List<DocumentSnapshot> searchResults = [];
+    for(DocumentSnapshot d in snapshot){
+      if(d.data.toString().contains(_searchText)){
+        searchResults.add(d);
+      }
+    }
+*/
     return Column(
       children: [
         SearchBar(),
+        //SearchScreen(),
         _countDrowpdown(context, num),
         //ListCards('name', 'relationship'),
         Expanded(
@@ -162,6 +182,7 @@ class _PeoplePageState extends State<PeoplePage> {
   Widget _buildListItem(BuildContext context, DocumentSnapshot data) {
     final person = Persons.fromSnapshot(data);
     String docID = data.id;
+    //print(docID);
 
     return ListCards(person.name, person.relation, person.image, docID);
   }
@@ -237,6 +258,14 @@ class _SearchBarState extends State<SearchBar> {
             color: Colors.grey[200],
           ),
           child: TextField(
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (BuildContext context) => SearchScreen(),
+                ),
+              );
+            },
             cursorColor: Colors.black,
             decoration: InputDecoration(
               icon: Icon(Icons.search, size: 20),
@@ -304,13 +333,16 @@ class _ListCardsState extends State<ListCards> {
                   subtitle: Text("관계 : ${widget.relationship}",
                       style: Theme.of(context).textTheme.bodyText2),
                   onTap: (){
-                    print('DOC ID ==> ${widget.id}');
+                    //print('DOC ID ==> ${widget.id}');
                     Navigator.push(
                       context,
                       MaterialPageRoute(
                         builder: (BuildContext context) => Detail(widget.id),
                       ),
-                    );               },
+                    );
+                    //print('      확인     ');
+                    //print(widget.id);
+                  },
                 )
               ],
             )));
