@@ -13,17 +13,18 @@ class AddPage extends StatefulWidget {
 }
 
 // 0. auth 먼저 하고
-// TODO: 1. image picker & Firestore 와 연결 ==> error check 만 하면 된다!
-// TODO: 2. + 버튼 누르면 더 적을 수 있게 칸이 바로바로 더 생겨야한다
-// TODO: 3. 사진 한장 말고 여러장으로/ 사진첩에서 말고 카메라도 가능하게
+// 1. Firestore 와 연결 ==> error check 만 하면 된다!
+// TODO: 2. image ==> 실버영과 이야기 해보기
+// TODO: 3. + 버튼 누르면 더 적을 수 있게 칸이 바로바로 더 생겨야한다
 
-// Firestore 연
+// + 버튼을 만든다
+// 눌러지면 바로바로 하나씩 더 만들어서 다시 그려줘야한다! --> setState
 
 class _AddPageState extends State<AddPage> {
   File _image;
-  String currentUrl;
-  final picker = ImagePicker();
-  bool saved = false;
+  // String currentUrl;
+  // final picker = ImagePicker();
+  // bool saved = false;
   FirebaseAuth auth = FirebaseAuth.instance;
 
   @override
@@ -33,6 +34,8 @@ class _AddPageState extends State<AddPage> {
     TextEditingController _groupCtl = TextEditingController();
     TextEditingController _featureCtl = TextEditingController();
 
+    void addFeature() {}
+
     CollectionReference people = FirebaseFirestore.instance
         .collection('Users')
         .doc(auth.currentUser.uid)
@@ -40,27 +43,28 @@ class _AddPageState extends State<AddPage> {
 
     List<dynamic> emptyList = [];
 
-    Future<String> uploadFile(File file) async {
-      String currUrl;
-      //TODO: check error
-
-      Reference imageRef = FirebaseStorage.instance.ref().child(_nameCtl.text);
-
-      //UploadTask currentTask = await imageRef.putFile(file);
-      UploadTask currentTask = imageRef.putFile(file);
-
-      print("saved successfully: [image from image picker]");
-
-      await currentTask.whenComplete(() async {
-        currUrl = await imageRef.getDownloadURL();
-
-        saved = true;
-
-        return currUrl;
-      });
-    }
+    // Future<String> uploadFile(File file) async {
+    //   String currUrl;
+    //   //TODO: check error
+    //
+    //   Reference imageRef = FirebaseStorage.instance.ref().child(_nameCtl.text);
+    //
+    //   //UploadTask currentTask = await imageRef.putFile(file);
+    //   UploadTask currentTask = imageRef.putFile(file);
+    //
+    //   print("saved successfully: [image from image picker]");
+    //
+    //   await currentTask.whenComplete(() async {
+    //     currUrl = await imageRef.getDownloadURL();
+    //
+    //     saved = true;
+    //
+    //     return currUrl;
+    //   });
+    // }
 
     //String currUrl
+
     Future<void> addProduct() async {
       try {
         assert(_nameCtl.text != null);
@@ -84,15 +88,15 @@ class _AddPageState extends State<AddPage> {
       }
     }
 
-    void getImage() async {
-      final PickedFile picked =
-          await picker.getImage(source: ImageSource.gallery);
-
-      if (picked == null) return;
-      setState(() {
-        _image = File(picked.path);
-      });
-    }
+    // void getImage() async {
+    //   final PickedFile picked =
+    //       await picker.getImage(source: ImageSource.gallery);
+    //
+    //   if (picked == null) return;
+    //   setState(() {
+    //     _image = File(picked.path);
+    //   });
+    // }
 
     return Scaffold(
       appBar: AppBar(
@@ -163,7 +167,9 @@ class _AddPageState extends State<AddPage> {
                     child: Text(
                       '사진 추가',
                     ),
-                    onPressed: () => getImage(),
+                    onPressed: () {
+                      Navigator.pushNamed(context, '/camera');
+                    },
                     textColor: Colors.blue,
                   ),
                 ],
@@ -196,7 +202,11 @@ class _AddPageState extends State<AddPage> {
               SizedBox(
                 height: 20,
               ),
+
               TextField(
+                onChanged: (text) {
+                  // 현재 텍스트필드의 텍스트를 출력
+                },
                 controller: _featureCtl,
                 decoration: InputDecoration(
                   hintText: '특징을 입력해주세요',

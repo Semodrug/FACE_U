@@ -57,7 +57,48 @@ class _ResultPageState extends State<ResultPage> {
                 "나의 사람 리스트 안에서 일치하는 사람을  확률적으로 보여드립니다.",
                 textAlign: TextAlign.left,
               ),
-              TabBar(tabs: [Tab(text: '1위'), Tab(text: '2위'), Tab(text: '3위')]),
+              SizedBox(height: 10),
+              TabBar(tabs: [
+                Tab(
+                    child: Column(
+                  children: [
+                    Text(
+                      '1위',
+                      style: TextStyle(fontSize: 18),
+                    ),
+                    Text(
+                      '97%',
+                      style: TextStyle(color: Colors.deepPurple, fontSize: 14),
+                    ),
+                  ],
+                )),
+                Tab(
+                    child: Column(
+                  children: [
+                    Text(
+                      '2위',
+                      style: TextStyle(fontSize: 18),
+                    ),
+                    Text(
+                      '77%',
+                      style: TextStyle(color: Colors.deepPurple, fontSize: 14),
+                    ),
+                  ],
+                )),
+                Tab(
+                    child: Column(
+                  children: [
+                    Text(
+                      '3위',
+                      style: TextStyle(fontSize: 18),
+                    ),
+                    Text(
+                      '35%',
+                      style: TextStyle(color: Colors.deepPurple, fontSize: 14),
+                    ),
+                  ],
+                )),
+              ]),
               Container(
                 height: 1000,
                 padding: EdgeInsets.fromLTRB(20, 10, 20, 10),
