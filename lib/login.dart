@@ -4,7 +4,6 @@ import 'package:flutter_signin_button/flutter_signin_button.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
 
-// TODO: 로그인 페이지 예쁘게
 final FirebaseAuth _auth = FirebaseAuth.instance;
 
 class LoginPage extends StatefulWidget {
@@ -21,10 +20,23 @@ class _LoginPageState extends State<LoginPage> {
           padding: EdgeInsets.all(8),
           scrollDirection: Axis.vertical,
           children: <Widget>[
-            SizedBox(height: 200.0),
+            SizedBox(height: 280.0),
             Column(
               children: <Widget>[
-                // Image.asset('assets/login_image.png'),
+                Text(
+                  '안면인식 장애자를 위한',
+                  style: TextStyle(
+                      fontSize: 18,
+                      color: Colors.black,
+                      fontWeight: FontWeight.w100),
+                ),
+                Text(
+                  'FaceU',
+                  style: TextStyle(
+                      fontSize: 30,
+                      color: Colors.black,
+                      fontWeight: FontWeight.w500),
+                ),
               ],
             ),
             SizedBox(height: 120.0),
@@ -48,18 +60,27 @@ class _OtherProvidersSignInSectionState
   @override
   Widget build(BuildContext context) {
     return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
+      crossAxisAlignment: CrossAxisAlignment.center,
       children: <Widget>[
         Container(
           padding: const EdgeInsets.only(top: 16.0),
           alignment: Alignment.center,
-          child: SignInButton(
-            Buttons.GoogleDark,
-            text: "GOOGLE",
+          child: FlatButton(
+            child: Text("구글 아이디로 로그인"),
+            minWidth: 343,
+            height: 44,
+            color: Theme.of(context).primaryColor,
             onPressed: () async {
               _signInWithGoogle();
             },
           ),
+          // SignInButton(
+          //   Buttons.GoogleDark,
+          //   text: "구글 아이디로 로그인",
+          //   onPressed: () async {
+          //     _signInWithGoogle();
+          //   },
+          // ),
         ),
       ],
     );
