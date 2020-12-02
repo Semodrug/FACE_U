@@ -63,7 +63,7 @@ class _SearchScreenState extends State<SearchScreen> {
     String docID = data.id;
     //print(docID);
 
-    return ListCards(person.name, person.relation, person.image, docID);
+    return ListCards(person.name, person.relation, person.image, person.group, docID);
   }
 
   @override
