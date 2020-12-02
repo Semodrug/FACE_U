@@ -1,9 +1,11 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'plan_add.dart';
 import 'plan_edit.dart';
 
 String id;
+final String authId = FirebaseAuth.instance.currentUser.uid;
 
 class Plan extends StatefulWidget {
   @override
@@ -63,9 +65,7 @@ class _PlanState extends State<Plan> {
   Widget _buildCards() {
     return Expanded(
         child: StreamBuilder<QuerySnapshot>(
-            stream: FirebaseFirestore.instance.collection("Users").doc("yey0811").collection("Plans").orderBy("place", descending: true).snapshots(),
-//            stream: FirebaseFirestore.instance.collection("Users").orderBy("price").snapshots(),
-//            stream: items.item.orderBy("price", descending: isDescending).snapshots(),
+            stream: FirebaseFirestore.instance.collection("Users").doc(authId).collection("Plans").snapshots(),
             builder: (BuildContext context,
                 AsyncSnapshot<QuerySnapshot> snapshot) {
               if(snapshot.hasError)
@@ -99,15 +99,15 @@ class _PlanState extends State<Plan> {
                                           borderRadius: BorderRadius.all(Radius.circular(5)),),
 //                                          child: Text(record.date.toString())
                                         child: Text(record.date.toString() ,
-                                            style: Theme.of(context).textTheme.bodyText1),
+                                            style: TextStyle(fontSize: 16,fontWeight: FontWeight.bold)),
                                       ),
-                                      SizedBox(width: 140),
+                                      SizedBox(width: 165),
                                       InkWell(
                                         child: Icon(Icons.create, size: 20, color:Colors.grey),
                                         onTap: () {
-                                          id = record.reference.id.toString();
+                                          id = record.reference.id;
                                           Navigator.push(context, MaterialPageRoute(
-                                              builder: (context) => EditPlanPage()
+                                              builder: (context) => EditPlanPage(id)
                                           )) ;
                                         },
                                       ),
@@ -126,7 +126,7 @@ class _PlanState extends State<Plan> {
                                       style: Theme.of(context).textTheme.bodyText1),
                                   Text("Memo:  " + record.memo,maxLines: 1,
                                       style: Theme.of(context).textTheme.bodyText1),
-                                  Text("With:  ",
+                                  Text("With:  " + record.withWhom,
                                       style: Theme.of(context).textTheme.bodyText1),
                                   SizedBox(height: 7.0),
                                   Row(
@@ -181,7 +181,7 @@ class _PlanState extends State<Plan> {
   }
 
 
-  
+
 
 }
 
