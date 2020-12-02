@@ -1,4 +1,3 @@
-import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'dart:io';
 
@@ -12,41 +11,56 @@ class AddPage extends StatefulWidget {
   _AddPageState createState() => _AddPageState();
 }
 
-// 0. auth 먼저 하고
-// 1. Firestore 와 연결 ==> error check 만 하면 된다!
-// TODO: 2. image ==> 실버영과 이야기 해보기
-// TODO: 3. + 버튼 누르면 더 적을 수 있게 칸이 바로바로 더 생겨야한다
-
-// + 버튼을 만든다
-// 눌러지면 바로바로 하나씩 더 만들어서 다시 그려줘야한다! --> setState
+// TODO: 이미지 10개 하는거 --> 10개 저장안하면 사용자 추가 안되게 하기
+// TODO: 대표 이미지 선택
 
 class _AddPageState extends State<AddPage> {
   File _image;
   // String currentUrl;
   // final picker = ImagePicker();
-  // bool saved = false;
   FirebaseAuth auth = FirebaseAuth.instance;
+
+  TextEditingController _nameCtl = TextEditingController();
+  TextEditingController _relationCtl = TextEditingController();
+  TextEditingController _groupCtl = TextEditingController();
+  TextEditingController _featureCtl_1 = TextEditingController();
+  TextEditingController _featureCtl_2 = TextEditingController();
+  TextEditingController _featureCtl_3 = TextEditingController();
+  TextEditingController _featureCtl_4 = TextEditingController();
+
+  bool secondFeature = false;
+  bool thirdFeature = false;
+  bool fourthFeature = false;
+  bool isFilled = false;
+
+  List<dynamic> featureList = [];
 
   @override
   Widget build(BuildContext context) {
-    TextEditingController _nameCtl = TextEditingController();
-    TextEditingController _relationCtl = TextEditingController();
-    TextEditingController _groupCtl = TextEditingController();
-    TextEditingController _featureCtl = TextEditingController();
-
-    void addFeature() {}
-
     CollectionReference people = FirebaseFirestore.instance
         .collection('Users')
         .doc(auth.currentUser.uid)
         .collection('People');
 
-    List<dynamic> emptyList = [];
+    // isFilled = _nameCtl.text.isNotEmpty &&
+    //     _relationCtl.text.isNotEmpty &&
+    //     _groupCtl.text.isNotEmpty &&
+    //     _featureCtl_1.text.isNotEmpty;
 
+    /* Pick image */
+    // void getImage() async {
+    //   final PickedFile picked =
+    //       await picker.getImage(source: ImageSource.gallery);
+    //
+    //   if (picked == null) return;
+    //   setState(() {
+    //     _image = File(picked.path);
+    //   });
+    // }
+
+    /* Upload picked image to firestore and Get image URL*/
     // Future<String> uploadFile(File file) async {
     //   String currUrl;
-    //   //TODO: check error
-    //
     //   Reference imageRef = FirebaseStorage.instance.ref().child(_nameCtl.text);
     //
     //   //UploadTask currentTask = await imageRef.putFile(file);
@@ -63,40 +77,37 @@ class _AddPageState extends State<AddPage> {
     //   });
     // }
 
-    //String currUrl
-
     Future<void> addProduct() async {
       try {
         assert(_nameCtl.text != null);
         assert(_relationCtl.text != null);
-        // assert(_descriptionCtl.text != null);
+        assert(_groupCtl.text != null);
+
+        /* save text field data to "featureList" */
+        featureList.add(_featureCtl_1.text);
+        secondFeature ? featureList.add(_featureCtl_2.text) : null;
+        thirdFeature ? featureList.add(_featureCtl_3.text) : null;
+        fourthFeature ? featureList.add(_featureCtl_4.text) : null;
+
+        assert(featureList != null);
 
         people.add({
           'name': _nameCtl.text,
           'relation': _relationCtl.text,
           'group': _groupCtl.text,
-          'feature': _featureCtl.text,
-          //'url': currUrl
+          'features': featureList,
+          // TODO: talk with 다은 (변수명, assert error)
+          //'image': currUrl
+          //'image_url': currUrl
         });
 
         print(
             "saved successfully: [${_nameCtl.text}-${_relationCtl.text}-${_groupCtl.text}]");
-
         // "saved successfully: [${_nameCtl.text}-${_relationCtl.text}-${_groupCtl.text}-$currUrl]");
       } catch (e) {
         print('Error: $e');
       }
     }
-
-    // void getImage() async {
-    //   final PickedFile picked =
-    //       await picker.getImage(source: ImageSource.gallery);
-    //
-    //   if (picked == null) return;
-    //   setState(() {
-    //     _image = File(picked.path);
-    //   });
-    // }
 
     return Scaffold(
       appBar: AppBar(
@@ -134,6 +145,7 @@ class _AddPageState extends State<AddPage> {
               //       SnackBar(content: Text('You can only do it once !!')));
               // } else {
               //currentUrl = await uploadFile(_image);
+
               addProduct();
 
               Navigator.pushReplacementNamed(context, '/home');
@@ -158,7 +170,8 @@ class _AddPageState extends State<AddPage> {
                       image: DecorationImage(
                           fit: BoxFit.fill,
                           image: _image == null
-                              ? NetworkImage("https://i.imgur.com/BoN9kdC.png")
+                              ? NetworkImage(
+                                  "https://png.pngitem.com/pimgs/s/105-1050694_user-placeholder-image-png-transparent-png.png")
                               : FileImage(_image)))),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -177,42 +190,98 @@ class _AddPageState extends State<AddPage> {
               SizedBox(
                 height: 20,
               ),
-              // TODO: hint theme
+              // TODO: hint theme with 은영
               TextField(
                 controller: _nameCtl,
                 decoration: InputDecoration(
-                  hintText: '이름을 입력해주세요',
-                  // hintStyle: TextStyle(color: Colors.blue[700])
-                ),
+                    hintText: '이름을 입력해주세요',
+                    hintStyle: TextStyle(color: Colors.grey)),
               ), // border: OutlineInputBorder()
               TextField(
                 controller: _relationCtl,
                 decoration: InputDecoration(
-                  hintText: '관계를 입력해주세요 (엄마, 대학친구, 상사 등)',
-                  // hintStyle: TextStyle(color: Colors.blue[700])
-                ),
+                    hintText: '관계를 입력해주세요 (엄마, 친구, 상사 등)',
+                    hintStyle: TextStyle(color: Colors.grey)),
               ),
               TextField(
                 controller: _groupCtl,
                 decoration: InputDecoration(
-                  hintText: '소속을 입력해주세요 (가족, 친구, 직장 등)',
-                  // hintStyle: TextStyle(color: Colors.blue[700])
-                ),
+                    hintText: '소속을 입력해주세요 (가족, 학교, 직장 등)',
+                    hintStyle: TextStyle(color: Colors.grey)),
               ),
               SizedBox(
                 height: 20,
               ),
 
+              /* Features */
+
               TextField(
-                onChanged: (text) {
-                  // 현재 텍스트필드의 텍스트를 출력
-                },
-                controller: _featureCtl,
+                controller: _featureCtl_1,
                 decoration: InputDecoration(
-                  hintText: '특징을 입력해주세요',
-                  // hintStyle: TextStyle(color: Colors.blue[700])
-                ),
+                    hintText: '특징을 입력해주세요',
+                    hintStyle: TextStyle(color: Colors.grey),
+                    suffixIcon: IconButton(
+                      icon: Icon(
+                        Icons.add,
+                        color: Colors.lightGreen,
+                      ),
+                      onPressed: () {
+                        setState(() {
+                          secondFeature = true;
+                          print(secondFeature);
+                        });
+                      },
+                    )),
               ),
+              secondFeature
+                  ? TextField(
+                      controller: _featureCtl_2,
+                      decoration: InputDecoration(
+                          hintText: '특징을 입력해주세요',
+                          hintStyle: TextStyle(color: Colors.grey),
+                          suffixIcon: IconButton(
+                            icon: Icon(
+                              Icons.add,
+                              color: Colors.lightGreen,
+                            ),
+                            onPressed: () {
+                              setState(() {
+                                thirdFeature = true;
+                                print(thirdFeature);
+                              });
+                            },
+                          )),
+                    )
+                  : SizedBox(),
+              thirdFeature
+                  ? TextField(
+                      controller: _featureCtl_3,
+                      decoration: InputDecoration(
+                          hintText: '특징을 입력해주세요',
+                          hintStyle: TextStyle(color: Colors.grey),
+                          suffixIcon: IconButton(
+                            icon: Icon(
+                              Icons.add,
+                              color: Colors.lightGreen,
+                            ),
+                            onPressed: () {
+                              setState(() {
+                                fourthFeature = true;
+                                print(fourthFeature);
+                              });
+                            },
+                          )),
+                    )
+                  : SizedBox(),
+              fourthFeature
+                  ? TextField(
+                      controller: _featureCtl_4,
+                      decoration: InputDecoration(
+                        hintText: '특징을 입력해주세요',
+                        hintStyle: TextStyle(color: Colors.grey),
+                      ),
+                    )
+                  : SizedBox(),
             ],
           ),
         ),
