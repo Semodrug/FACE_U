@@ -15,21 +15,8 @@ class PeoplePage extends StatefulWidget {
 
 
 class _PeoplePageState extends State<PeoplePage> {
-  final num = 32; // streambuilder 로 불러오기
+  final num = 0; // streambuilder 로 불러오기
   String _filterOrSort = "이름순";
-/*
-  final TextEditingController _filter = TextEditingController();
-  FocusNode focusNode = FocusNode();
-  String _searchText = "";
-
-  _PeoplePageState() {
-    _filter.addListener(() {
-      setState(() {
-        _searchText = _filter.text;
-      });
-    });
-  }
-*/
 
   @override
   Widget build(BuildContext context) {
@@ -42,7 +29,7 @@ class _PeoplePageState extends State<PeoplePage> {
         break;
 
       case "그룹순":
-        query = query.orderBy('name', descending: true);
+        query = query.orderBy('group', descending: false);
         break;
     }
 
@@ -75,6 +62,10 @@ class _PeoplePageState extends State<PeoplePage> {
                 minWidth: 10,
                 height: 22,
                 child: FlatButton(
+                  //TODO: login으로 그냥 임의로 가기 위해 만들어 놓은 것 나중에 지우자!!
+                  onPressed: (){
+                    Navigator.pushNamed(context, '/login');
+                  },
                   child: Text(
                     num.toString(),
                     style: TextStyle(color: Colors.teal[400], fontSize: 12.0),
@@ -184,7 +175,7 @@ class _PeoplePageState extends State<PeoplePage> {
     String docID = data.id;
     //print(docID);
 
-    return ListCards(person.name, person.relation, person.image, docID);
+    return ListCards(person.name, person.relation, person.image, person.group,docID);
   }
 /*
   //TODO: Query 사용하기
@@ -298,12 +289,14 @@ class ListCards extends StatefulWidget {
   final String name;
   final String relationship;
   final String image;
+  final String group;
   final String id;
 
   const ListCards(
       this.name,
       this.relationship,
       this.image,
+      this.group,
       this.id, {
         Key key,
       }) : super(key: key);
@@ -330,7 +323,7 @@ class _ListCardsState extends State<ListCards> {
                   ),
                   title: Text("이름 : ${widget.name}",
                       style: Theme.of(context).textTheme.bodyText1),
-                  subtitle: Text("관계 : ${widget.relationship}",
+                  subtitle: Text("관계 : ${widget.relationship}" +'\n'+ '그룹 : ${widget.group}',
                       style: Theme.of(context).textTheme.bodyText2),
                   onTap: (){
                     //print('DOC ID ==> ${widget.id}');

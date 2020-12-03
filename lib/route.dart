@@ -18,9 +18,9 @@ class FaceUApp extends StatelessWidget {
     return MaterialApp(
         title: 'Shrine',
         home: HomePage(), //HomePage
-//        initialRoute: '/login',
+        initialRoute: '/login',
 //        initialRoute: '/home',
-        initialRoute: '/result',
+//        initialRoute: '/result',
         routes: {
           '/login': (context) => LoginPage(),
           '/home': (context) => HomePage(),

@@ -1,7 +1,11 @@
+import 'dart:async';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:date_format/date_format.dart';
 import 'package:intl/intl.dart';
+
+import 'plan.dart';
 
 class PlanAddPage extends StatefulWidget {
   @override
@@ -77,7 +81,7 @@ class _PlanAddPageState extends State<PlanAddPage> {
 
   @override
   Widget build(BuildContext context) {
-    CollectionReference plans = FirebaseFirestore.instance.collection("Users").doc("yey0811").collection("Plans");
+    CollectionReference plans = FirebaseFirestore.instance.collection("Users").doc(authId).collection("Plans");
     _height = MediaQuery.of(context).size.height;
     _width = MediaQuery.of(context).size.width;
     dateTime = DateFormat.yMd().format(DateTime.now());
@@ -96,7 +100,7 @@ class _PlanAddPageState extends State<PlanAddPage> {
               onTap: () {
                 plans.add({
 //                  'time': date,
-                  'date': DateFormat.yMd().format(selectedDate),
+                  'date': selectedDate != null? DateFormat.yMd().format(DateTime.now()): DateFormat.yMd().format(selectedDate),
                   'time': formatDate(
                       DateTime(2019, 08, 1, selectedTime.hour, selectedTime.minute),
                       [hh, ':', nn, " ", am]),
@@ -104,6 +108,8 @@ class _PlanAddPageState extends State<PlanAddPage> {
                   'memo': _memoCtr.text,
                   'withWhom': _withCtr.text
                 });
+
+                Navigator.pop(context);
               }
             ),
           )
