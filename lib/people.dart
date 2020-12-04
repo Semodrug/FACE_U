@@ -12,8 +12,6 @@ class PeoplePage extends StatefulWidget {
   _PeoplePageState createState() => _PeoplePageState();
 }
 
-
-
 class _PeoplePageState extends State<PeoplePage> {
   final num = 0; // streambuilder 로 불러오기
   String _filterOrSort = "이름순";
@@ -21,7 +19,10 @@ class _PeoplePageState extends State<PeoplePage> {
   @override
   Widget build(BuildContext context) {
     ///sumi
-    Query query = FirebaseFirestore.instance.collection('Users').doc(auth_id).collection('People');
+    Query query = FirebaseFirestore.instance
+        .collection('Users')
+        .doc(auth_id)
+        .collection('People');
 
     switch (_filterOrSort) {
       case "이름순":
@@ -34,6 +35,7 @@ class _PeoplePageState extends State<PeoplePage> {
     }
 
     Stream<QuerySnapshot> data = query.snapshots();
+
     ///
 
     return Scaffold(
@@ -63,7 +65,7 @@ class _PeoplePageState extends State<PeoplePage> {
                 height: 22,
                 child: FlatButton(
                   //TODO: login으로 그냥 임의로 가기 위해 만들어 놓은 것 나중에 지우자!!
-                  onPressed: (){
+                  onPressed: () {
                     Navigator.pushNamed(context, '/login');
                   },
                   child: Text(
@@ -122,6 +124,7 @@ class _PeoplePageState extends State<PeoplePage> {
             );
           }).toList(),
         ),
+
         ///
       ],
     );
@@ -129,8 +132,8 @@ class _PeoplePageState extends State<PeoplePage> {
 
   Widget _buildBody(BuildContext context, Stream<QuerySnapshot> data) {
     return StreamBuilder<QuerySnapshot>(
-      //stream: Firestore.instance.collection('Persons').snapshots(),
-      ///sumi
+        //stream: Firestore.instance.collection('Persons').snapshots(),
+        ///sumi
         stream: data,
         //stream: person_data.orderBy('name', descending: isDescending).snapshots(),
 
@@ -160,7 +163,7 @@ class _PeoplePageState extends State<PeoplePage> {
           child: ListView(
             padding: EdgeInsets.all(16.0),
             children:
-            snapshot.map((data) => _buildListItem(context, data)).toList(),
+                snapshot.map((data) => _buildListItem(context, data)).toList(),
           ),
         ),
         SizedBox(
@@ -175,7 +178,8 @@ class _PeoplePageState extends State<PeoplePage> {
     String docID = data.id;
     //print(docID);
 
-    return ListCards(person.name, person.relation, person.image, person.group,docID);
+    return ListCards(
+        person.name, person.relation, person.image_url, person.group, docID);
   }
 /*
   //TODO: Query 사용하기
@@ -202,7 +206,7 @@ class _PeoplePageState extends State<PeoplePage> {
 
 class Persons {
   final String name;
-  final String image;
+  final String image_url;
   final List<dynamic> features;
   final String relation;
   final String group;
@@ -211,12 +215,10 @@ class Persons {
 
   Persons.fromMap(Map<String, dynamic> map, {this.reference})
       : assert(map['name'] != null),
-        assert(map['image'] != null),
         assert(map['relation'] != null),
-        assert(map['features'] != null),
         assert(map['group'] != null),
         name = map['name'],
-        image = map['image'],
+        image_url = map['image_url'],
         features = map['features'],
         relation = map['relation'],
         group = map['group'];
@@ -288,18 +290,18 @@ class _SearchBarState extends State<SearchBar> {
 class ListCards extends StatefulWidget {
   final String name;
   final String relationship;
-  final String image;
+  final String image_url;
   final String group;
   final String id;
 
   const ListCards(
-      this.name,
-      this.relationship,
-      this.image,
-      this.group,
-      this.id, {
-        Key key,
-      }) : super(key: key);
+    this.name,
+    this.relationship,
+    this.image_url,
+    this.group,
+    this.id, {
+    Key key,
+  }) : super(key: key);
 
   @override
   _ListCardsState createState() => _ListCardsState();
@@ -313,31 +315,32 @@ class _ListCardsState extends State<ListCards> {
         height: 110,
         child: Card(
             child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: <Widget>[
-                ListTile(
-                  leading: Container(
-                    width: 84,
-                    height: 84,
-                    child: Image.network(widget.image),
+          mainAxisSize: MainAxisSize.min,
+          children: <Widget>[
+            ListTile(
+              leading: Container(
+                width: 84,
+                height: 84,
+                child: Image.network(widget.image_url),
+              ),
+              title: Text("이름 : ${widget.name}",
+                  style: Theme.of(context).textTheme.bodyText1),
+              subtitle: Text(
+                  "관계 : ${widget.relationship}" + '\n' + '그룹 : ${widget.group}',
+                  style: Theme.of(context).textTheme.bodyText2),
+              onTap: () {
+                //print('DOC ID ==> ${widget.id}');
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (BuildContext context) => Detail(widget.id),
                   ),
-                  title: Text("이름 : ${widget.name}",
-                      style: Theme.of(context).textTheme.bodyText1),
-                  subtitle: Text("관계 : ${widget.relationship}" +'\n'+ '그룹 : ${widget.group}',
-                      style: Theme.of(context).textTheme.bodyText2),
-                  onTap: (){
-                    //print('DOC ID ==> ${widget.id}');
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (BuildContext context) => Detail(widget.id),
-                      ),
-                    );
-                    //print('      확인     ');
-                    //print(widget.id);
-                  },
-                )
-              ],
-            )));
+                );
+                //print('      확인     ');
+                //print(widget.id);
+              },
+            )
+          ],
+        )));
   }
 }

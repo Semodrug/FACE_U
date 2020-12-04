@@ -3,7 +3,9 @@ import 'dart:io';
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
+
 import 'package:image_picker/image_picker.dart';
 
 class AddPage extends StatefulWidget {
@@ -11,12 +13,11 @@ class AddPage extends StatefulWidget {
   _AddPageState createState() => _AddPageState();
 }
 
-// TODO: 이미지 10개 하는거 --> 10개 저장안하면 사용자 추가 안되게 하기
 // TODO: 대표 이미지 선택
 
 class _AddPageState extends State<AddPage> {
   File _image;
-  // String currentUrl;
+  String _profileImageURL;
   // final picker = ImagePicker();
   FirebaseAuth auth = FirebaseAuth.instance;
 
@@ -77,6 +78,27 @@ class _AddPageState extends State<AddPage> {
     //   });
     // }
 
+    /* Pick image and Upload picked image to firestore and Get image URL */
+    void _uploadImageToStorage(ImageSource source) async {
+      File image = await ImagePicker.pickImage(source: source);
+
+      if (image == null) return;
+
+      setState(() {
+        _image = image;
+      });
+
+      Reference storageReference =
+          FirebaseStorage.instance.ref().child("profile");
+
+      UploadTask storageUploadTask = storageReference.putFile(_image);
+
+      String downloadURL = await storageReference.getDownloadURL();
+      setState(() {
+        _profileImageURL = downloadURL;
+      });
+    }
+
     Future<void> addProduct() async {
       try {
         assert(_nameCtl.text != null);
@@ -97,13 +119,12 @@ class _AddPageState extends State<AddPage> {
           'group': _groupCtl.text,
           'features': featureList,
           // TODO: talk with 다은 (변수명, assert error)
-          //'image': currUrl
-          //'image_url': currUrl
+          'image_url': _profileImageURL
         });
 
         print(
-            "saved successfully: [${_nameCtl.text}-${_relationCtl.text}-${_groupCtl.text}]");
-        // "saved successfully: [${_nameCtl.text}-${_relationCtl.text}-${_groupCtl.text}-$currUrl]");
+            // "saved successfully: [${_nameCtl.text}-${_relationCtl.text}-${_groupCtl.text}]");
+            "saved successfully: [${_nameCtl.text}-${_relationCtl.text}-${_groupCtl.text}-_profileImageURL]");
       } catch (e) {
         print('Error: $e');
       }
@@ -140,15 +161,14 @@ class _AddPageState extends State<AddPage> {
             onPressed: () async {
               // TODO: 완료되었다는 메세지와 함께 자동으로 home으로 가게끔
 
-              // if (_image == null) {
-              //   Scaffold.of(context).showSnackBar(
-              //       SnackBar(content: Text('You can only do it once !!')));
-              // } else {
-              //currentUrl = await uploadFile(_image);
+              if (_image == null) {
+                Scaffold.of(context)
+                    .showSnackBar(SnackBar(content: Text('사진을 추가해주세요.')));
+              } else {
+                addProduct();
 
-              addProduct();
-
-              Navigator.pushReplacementNamed(context, '/home');
+                Navigator.pushReplacementNamed(context, '/home');
+              }
               //}
             },
           ),
@@ -181,7 +201,41 @@ class _AddPageState extends State<AddPage> {
                       '사진 추가',
                     ),
                     onPressed: () {
-                      Navigator.pushNamed(context, '/camera');
+                      return showDialog(
+                          context: context,
+                          builder: (BuildContext context) {
+                            return SimpleDialog(
+                              title: Text(
+                                '사진 추가',
+                                style: TextStyle(
+                                    fontWeight: FontWeight.bold, fontSize: 16),
+                              ),
+                              children: <Widget>[
+                                SimpleDialogOption(
+                                  child: Text('사진 촬영하기'),
+                                  onPressed: () {
+                                    _uploadImageToStorage(ImageSource.camera);
+                                    Navigator.pop(context);
+                                  },
+                                ),
+                                SimpleDialogOption(
+                                  child: Text('갤러리에서 고르기'),
+                                  onPressed: () {
+                                    _uploadImageToStorage(ImageSource.gallery);
+                                    Navigator.pop(context);
+                                  },
+                                ),
+                                SimpleDialogOption(
+                                  child: Text('취소'),
+                                  onPressed: () {
+                                    Navigator.pop(context);
+                                  },
+                                ),
+                              ],
+                            );
+                          });
+                      ;
+                      // Navigator.pushNamed(context, '/camera');
                     },
                     textColor: Colors.blue,
                   ),
