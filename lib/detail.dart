@@ -36,7 +36,7 @@ class _DetailState extends State<Detail> {
             .snapshots(),
         builder: (context, stream) {
           if (!stream.hasData) return LinearProgressIndicator();
-          print(widget.id);
+          //print(widget.id);
           return _buildListItem(context, stream.data);
         });
   }
