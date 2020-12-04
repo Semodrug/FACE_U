@@ -1,6 +1,7 @@
 # face_u
 
 A new Flutter application.
+# for check github and slack
 
 ## Getting Started
 
