@@ -59,7 +59,8 @@ class _DetailState extends State<Detail> {
                 decoration: BoxDecoration(
                     shape: BoxShape.circle,
                     image: DecorationImage(
-                        fit: BoxFit.fill, image: NetworkImage(person.image)))),
+                        fit: BoxFit.fill,
+                        image: NetworkImage(person.image_url)))),
             Row(
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
@@ -82,7 +83,7 @@ class _DetailState extends State<Detail> {
                   child: Text(
                     '삭제',
                   ),
-                //TODO: delete 할 때 The method '[]' was called on null. 이 에러뜨는 거 방지!! 어캐
+                  //TODO: delete 할 때 The method '[]' was called on null. 이 에러뜨는 거 방지!! 어캐
                   onPressed: () {
                     //Navigator.pushNamed(context, '/home');
                     Navigator.pop(context);

@@ -4,14 +4,13 @@ import 'package:flutter/material.dart';
 //import 'package:firebase_auth/firebase_auth.dart';
 import 'people.dart';
 
-
 class Update extends StatefulWidget {
   final DocumentSnapshot data;
 
   const Update(
-      this.data, {
-        Key key,
-      }) : super(key: key);
+    this.data, {
+    Key key,
+  }) : super(key: key);
 
   @override
   _UpdateState createState() {
@@ -20,7 +19,6 @@ class Update extends StatefulWidget {
 }
 
 class _UpdateState extends State<Update> {
-
   TextEditingController _nameCon = TextEditingController();
   TextEditingController _groupCon = TextEditingController();
   TextEditingController _relationCon = TextEditingController();
@@ -54,7 +52,8 @@ class _UpdateState extends State<Update> {
             child: Text('저장'),
             onPressed: () {
               if (_nameCon.text.isNotEmpty) {
-                updateDoc( widget.data.id ,_nameCon.text, _groupCon.text, _relationCon.text, person.image, person.features);
+                updateDoc(widget.data.id, _nameCon.text, _groupCon.text,
+                    _relationCon.text, person.image_url, person.features);
               }
               _nameCon.clear();
               _groupCon.clear();
@@ -65,8 +64,7 @@ class _UpdateState extends State<Update> {
           )
         ],
       ),
-      body:
-      Column(
+      body: Column(
         children: <Widget>[
           Expanded(
             child: Container(
@@ -78,14 +76,12 @@ class _UpdateState extends State<Update> {
                     height: 100,
                     child: Center(
                         child: Image(
-                          image: NetworkImage(person.image),
-                        )
-                    ),
+                      image: NetworkImage(person.image_url),
+                    )),
                   ),
                   TextField(
                     controller: _nameCon,
-                    decoration: InputDecoration(
-                        labelText: "이름"),
+                    decoration: InputDecoration(labelText: "이름"),
                   ),
                   TextField(
                     autofocus: true,
@@ -105,15 +101,19 @@ class _UpdateState extends State<Update> {
           )
         ],
       ),
-
-
     );
   }
 
   //TODO: dialog가 아니라 하나의 새로운 페이지를 만들어야 한다.
 
-  void updateDoc(String docID, String name, String group, String relation, String image, List<dynamic> features ) {
-    FirebaseFirestore.instance.collection('Users').doc(auth_id).collection('People').doc(docID).updateData({
+  void updateDoc(String docID, String name, String group, String relation,
+      String image, List<dynamic> features) {
+    FirebaseFirestore.instance
+        .collection('Users')
+        .doc(auth_id)
+        .collection('People')
+        .doc(docID)
+        .updateData({
       'name': name,
       'group': group,
       'relation': relation,
@@ -121,6 +121,4 @@ class _UpdateState extends State<Update> {
       'features': features,
     });
   }
-
-
 }
