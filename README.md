@@ -2,6 +2,7 @@
 
 A new Flutter application.
 # for check github and slack
+# eun young Hi
 
 ## Getting Started
 
