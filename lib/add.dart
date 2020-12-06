@@ -4,7 +4,6 @@ import 'dart:io';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
-import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
 
 import 'package:image_picker/image_picker.dart';
 
@@ -12,8 +11,6 @@ class AddPage extends StatefulWidget {
   @override
   _AddPageState createState() => _AddPageState();
 }
-
-// TODO: 대표 이미지 선택
 
 class _AddPageState extends State<AddPage> {
   File _image;
@@ -118,13 +115,12 @@ class _AddPageState extends State<AddPage> {
           'relation': _relationCtl.text,
           'group': _groupCtl.text,
           'features': featureList,
-          // TODO: talk with 다은 (변수명, assert error)
           'image_url': _profileImageURL
         });
 
         print(
             // "saved successfully: [${_nameCtl.text}-${_relationCtl.text}-${_groupCtl.text}]");
-            "saved successfully: [${_nameCtl.text}-${_relationCtl.text}-${_groupCtl.text}-_profileImageURL]");
+            "saved successfully: [${_nameCtl.text}-${_relationCtl.text}-${_groupCtl.text}-$_profileImageURL]");
       } catch (e) {
         print('Error: $e');
       }
@@ -155,7 +151,6 @@ class _AddPageState extends State<AddPage> {
             child: Text(
               '완료',
               maxLines: 1,
-              // TODO: controller의 내용이 차있으면 blue, 없으면 gray
               style: TextStyle(color: Colors.blue),
             ),
             onPressed: () async {
@@ -163,7 +158,7 @@ class _AddPageState extends State<AddPage> {
 
               if (_image == null) {
                 Scaffold.of(context)
-                    .showSnackBar(SnackBar(content: Text('사진을 추가해주세요.')));
+                    .showSnackBar(SnackBar(content: Text('사진을 추가해주세요!')));
               } else {
                 addProduct();
 
