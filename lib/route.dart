@@ -1,13 +1,17 @@
 import 'package:flutter/material.dart';
 
-import 'camera.dart';
-import 'login.dart';
-import 'home.dart';
-import 'detail.dart';
-import 'add.dart';
-//import 'plan.dart';
-import 'recognition.dart';
-import 'result.dart';
+import 'package:face_u/login.dart';
+
+import 'package:face_u/home.dart';
+import 'package:face_u/detail.dart';
+import 'package:face_u/add.dart';
+
+import 'package:face_u/camera.dart';
+import 'package:face_u/barcode.dart';
+import 'package:face_u/face_detection.dart';
+import 'package:face_u/result.dart';
+
+import 'package:face_u/plan.dart';
 
 class FaceUApp extends StatelessWidget {
   Color color = const Color(0xffFFdb80);
@@ -16,20 +20,22 @@ class FaceUApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-        title: 'Shrine',
+        title: 'FaceU',
         home: HomePage(), //HomePage
         initialRoute: '/login',
-//        initialRoute: '/home',
-//        initialRoute: '/result',
         routes: {
           '/login': (context) => LoginPage(),
+
           '/home': (context) => HomePage(),
-          '/add': (context) => AddPage(),
-          '/recognition': (context) => Recognition(),
-          //'/plan': (context) => Plan(),
-          '/camera': (context) => Camera(),
-          '/result': (context) => ResultPage(),
           //'/detail': (context) => Detail(doc_id),
+          '/add': (context) => AddPage(),
+
+          '/camera': (context) => Camera(),
+          '/face_detection': (context) => FaceDetection(),
+          '/barcode': (context) => Barcode(),
+          '/result': (context) => ResultPage(),
+
+          //'/plan': (context) => Plan(),
         },
         theme: ThemeData(
           primaryColor: Color(0xffFFdb80),
