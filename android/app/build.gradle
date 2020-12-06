@@ -50,8 +50,18 @@ android {
             signingConfig signingConfigs.debug
         }
     }
+
+    aaptOptions {
+        noCompress "tflite"
+    }
 }
 
 flutter {
     source '../..'
+}
+
+dependencies {
+    // ...
+    // Image labeling feature with bundled automl model
+    implementation 'com.google.mlkit:image-labeling-automl:16.0.0'
 }
