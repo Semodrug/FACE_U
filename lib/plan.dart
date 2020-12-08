@@ -6,6 +6,7 @@ import 'plan_edit.dart';
 
 String id;
 final String authId = FirebaseAuth.instance.currentUser.uid;
+int numOfPlans;
 
 class Plan extends StatefulWidget {
   @override
@@ -40,17 +41,17 @@ class _PlanState extends State<Plan> {
             Row(
               children: <Widget>[
                 SizedBox(width:15),
-                Text('Plans'),// theme 추가
-                ButtonTheme(
-                  minWidth: 10,
-                  height: 22,
-                  child: FlatButton(
-                    child: Text(
-                      "32",
-                      style: TextStyle(color: Colors.teal[400], fontSize: 12.0),
-                    ),
-                  ),
-                ),
+//                Text('Plans'),// theme 추가
+//                ButtonTheme(
+//                  minWidth: 10,
+//                  height: 22,
+//                  child: FlatButton(
+//                    child: Text(
+//                      "32",
+//                      style: TextStyle(color: Colors.teal[400], fontSize: 12.0),
+//                    ),
+//                  ),
+//                ),
               ],
             ),
             _buildCards()
@@ -75,7 +76,7 @@ class _PlanState extends State<Plan> {
               return GridView.count(
                   crossAxisCount: 1,
                   padding: EdgeInsets.all(10.0),
-                  childAspectRatio: 8.0 / 6.8,
+                  childAspectRatio: 8.0 / 4.5,
                   children: snapshot.data.docs.map((DocumentSnapshot data) {
                     var record = Record.fromSnapshot(data);
                     return Card(
@@ -129,41 +130,28 @@ class _PlanState extends State<Plan> {
                                   Text("With:  " + record.withWhom,
                                       style: Theme.of(context).textTheme.bodyText1),
                                   SizedBox(height: 7.0),
-                                  Row(
-                                    children: [
-                                      Container(
-                                          height: 100,
-                                          width: 150,
-                                          child: Image.network('http://image.xportsnews.com/contents/images/upload/article/2016/1118/1479450841761653.jpg', fit: BoxFit.fitWidth,)
-                                      ),
-                                      SizedBox(width: 10),
-                                      Column(
-                                        crossAxisAlignment: CrossAxisAlignment.start,
-                                        children: [
-                                          Text("Name: Eunyoung Yang"),
-                                          Text("Relation: Family"),
-                                          Text("Features: long hair"),
-                                        ],
-                                      )
-                                    ],
-                                  ),
+//                                  Row(
+//                                    children: [
+//                                      Container(
+//                                          height: 100,
+//                                          width: 150,
+//                                          child: Image.network('http://image.xportsnews.com/contents/images/upload/article/2016/1118/1479450841761653.jpg', fit: BoxFit.fitWidth,)
+//                                      ),
+//                                      SizedBox(width: 10),
+//                                      Column(
+//                                        crossAxisAlignment: CrossAxisAlignment.start,
+//                                        children: [
+//                                          Text("Name: Eunyoung Yang"),
+//                                          Text("Relation: Family"),
+//                                          Text("Features: long hair"),
+//                                        ],
+//                                      )
+//                                    ],
+//                                  ),
 
                                   Row(
                                     children: [
                                       SizedBox(width: 300),
-//                                      InkWell(
-//                                          child: Text(
-//                                            "more",
-//                                            style: TextStyle(fontSize: 12, color: Colors.indigo),
-//                                          ),
-//                                          onTap: () {
-//                                            Navigator.push(
-//                                              context,
-//                                              MaterialPageRoute(
-//                                                builder: (context) => PlanDetailPage(),
-//                                              ),
-//                                            );
-//                                          })
                                     ],
                                   )
                                 ],
