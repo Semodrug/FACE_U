@@ -22,6 +22,8 @@ class _UpdateState extends State<Update> {
   TextEditingController _nameCon = TextEditingController();
   TextEditingController _groupCon = TextEditingController();
   TextEditingController _relationCon = TextEditingController();
+  //list 개수만큼
+  //TextEditingController _featureCon = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -30,8 +32,19 @@ class _UpdateState extends State<Update> {
     _nameCon.text = person.name;
     _groupCon.text = person.group;
     _relationCon.text = person.relation;
+    //list
+    //List<TextEditingController> _featuresCon = List.generate(person.features.length, (i) => TextEditingController());
 
-    return Scaffold(
+    Map<String,TextEditingController> _featuresCon = {};
+    var textFields = <TextField>[];
+    person.features.forEach((feat) {
+      var textEditingController = new TextEditingController(text: feat);
+      _featuresCon.putIfAbsent(feat, () => textEditingController);
+      return textFields.add(TextField(controller: textEditingController));
+    });
+    print('LIST ==> ${textFields[0]}');
+
+      return Scaffold(
       appBar: AppBar(
         title: new Center(child: new Text('Edit', textAlign: TextAlign.center)),
         leading: FlatButton(
@@ -44,6 +57,8 @@ class _UpdateState extends State<Update> {
             _nameCon.clear();
             _groupCon.clear();
             _relationCon.clear();
+            //list
+            //_featuresCon.clear();
             Navigator.pop(context);
           },
         ),
@@ -51,6 +66,10 @@ class _UpdateState extends State<Update> {
           FlatButton(
             child: Text('저장'),
             onPressed: () {
+//              if (_nameCon.text.isNotEmpty) {
+//                updateDoc(widget.data.id, _nameCon.text, _groupCon.text,
+//                    _relationCon.text, person.image_url, person.features);
+//              }
               if (_nameCon.text.isNotEmpty) {
                 updateDoc(widget.data.id, _nameCon.text, _groupCon.text,
                     _relationCon.text, person.image_url, person.features);
@@ -58,6 +77,9 @@ class _UpdateState extends State<Update> {
               _nameCon.clear();
               _groupCon.clear();
               _relationCon.clear();
+
+             // _featuresCon.clear();
+
 
               Navigator.pop(context);
             },
@@ -95,6 +117,32 @@ class _UpdateState extends State<Update> {
                     decoration: InputDecoration(
                         border: InputBorder.none, labelText: "관계"),
                   ),
+
+                  Column(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children:
+
+                      List.generate(person.features.length, (index) {
+                        print(textFields[index]);
+                        return
+                          Column(children: [
+                            TextField(
+                              autofocus: true,
+                              controller: _relationCon,
+                              decoration: InputDecoration(
+                                  border: InputBorder.none, labelText: "특징"),
+                              //'특징${index + 1} :  ${listOfFeatures[index]}',
+                            ) ,
+                            SizedBox(
+                              height: 5,
+                            ),
+                          ]);
+                      })
+
+
+                  )
+
                 ],
               ),
             ),
@@ -104,7 +152,6 @@ class _UpdateState extends State<Update> {
     );
   }
 
-  //TODO: dialog가 아니라 하나의 새로운 페이지를 만들어야 한다.
 
   void updateDoc(String docID, String name, String group, String relation,
       String image, List<dynamic> features) {
