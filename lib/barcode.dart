@@ -168,7 +168,6 @@ class _ReadBarcodeState extends State<ReadBarcode> {
               ),
             )
           ),
-
         ],
       ),
     );

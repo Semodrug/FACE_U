@@ -28,10 +28,14 @@ class _EditPlanPageState extends State<EditPlanPage> {
   String _hour, _minute, _time;
   String dateTime;
   DateTime date, time;
-  DateTime selectedDate = DateTime.now();
+//  DateTime selectedDate = DateTime.now();
   TimeOfDay selectedTime = TimeOfDay(hour: 00, minute: 00);
+  DateTime selectedDate =  DateTime(2019, 08, 1);
   TextEditingController _dateController = TextEditingController();
   TextEditingController _timeController = TextEditingController();
+
+//  FirebaseFirestore.instance.collection("Users").doc(authId).collection("Plans")
+//  FirebaseFirestore.instance.CollectionReference("Users").Doc
 
   Future<Null> _selectDate(BuildContext context) async {
     final DateTime picked = await showDatePicker(
@@ -45,6 +49,7 @@ class _EditPlanPageState extends State<EditPlanPage> {
         selectedDate = picked;
         date = picked;
         _dateController.text = DateFormat.yMd().format(selectedDate);
+        //_dateController.text = DateFormat.yMd().format(selectedDate);
       });
   }
 
@@ -270,8 +275,8 @@ class _EditPlanPageState extends State<EditPlanPage> {
                   SizedBox(
                     height: 20,
                   ),
-                  Text(id),
-                  Text(record.memo),
+//                  Text(id),
+//                  Text(record.memo),
                 ],
               ),
             ),
