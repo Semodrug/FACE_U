@@ -64,4 +64,5 @@ dependencies {
     // ...
     // Image labeling feature with bundled automl model
     implementation 'com.google.mlkit:image-labeling-automl:16.0.0'
+    implementation 'com.google.firebase:firebase-ml-vision-barcode-model:16.0.1'
 }

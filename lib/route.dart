@@ -32,7 +32,7 @@ class FaceUApp extends StatelessWidget {
 
           '/camera': (context) => Camera(),
           '/face_detection': (context) => FaceDetection(),
-          '/barcode': (context) => Barcode(),
+          '/barcode': (context) => ReadBarcode(),
           '/result': (context) => ResultPage(),
 
           //'/plan': (context) => Plan(),

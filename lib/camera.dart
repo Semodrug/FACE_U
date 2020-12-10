@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:firebase_ml_vision/firebase_ml_vision.dart';
 import 'package:flutter/material.dart';
 
 import 'package:firebase_auth/firebase_auth.dart';
@@ -19,11 +20,45 @@ class Camera extends StatefulWidget {
 }
 
 class CameraState extends State<Camera> {
-  File _image;
+//  File _image;
+  File galleryImage;
   FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
   User _user;
   FirebaseStorage _firebaseStorage = FirebaseStorage.instance;
   String _profileImageURL = "";
+
+  var text = '';
+  Future pickImage() async {
+//    var awaitImage = await ImagePicker.pickImage(source: ImageSource.gallery);
+
+//    setState(() {
+//      pickedImage = awaitImage;
+//      imageLoaded = true;
+//    });
+
+    FirebaseVisionImage visionImage = FirebaseVisionImage.fromFile(galleryImage);
+    VisionText readedText;
+
+    final BarcodeDetector barcodeDetector =
+    FirebaseVision.instance.barcodeDetector();
+
+    final List<Barcode> barcodes =
+    await barcodeDetector.detectInImage(visionImage);
+
+    for (Barcode barcode in barcodes) {
+
+      final String rawValue = barcode.rawValue;
+      final BarcodeValueType valueType = barcode.valueType;
+
+      setState(() {
+        text ="$rawValue";
+//        text ="$rawValue\nType: $valueType";
+      });
+
+    }
+    barcodeDetector.close();
+  }
+
 
   @override
   void initState() {
@@ -40,12 +75,12 @@ class CameraState extends State<Camera> {
 
     if (image == null) return;
     setState(() {
-      _image = image;
+      galleryImage = image;
     });
 
     Reference storageReference = _firebaseStorage.ref().child("profile");
 
-    UploadTask storageUploadTask = storageReference.putFile(_image);
+    UploadTask storageUploadTask = storageReference.putFile(galleryImage);
 
     String downloadURL = await storageReference.getDownloadURL();
     setState(() {
@@ -60,21 +95,24 @@ class CameraState extends State<Camera> {
         SimpleDialogOption(
           child: Text('얼굴 인식하기'),
           onPressed: () {
-            _uploadImageToStorage(ImageSource.camera);
+            _uploadImageToStorage(ImageSource.gallery);
             Navigator.push(
                 context,
                 MaterialPageRoute(
-                    builder: (context) => FaceDetection(image: _image)));
+                    builder: (context) => FaceDetection(image: galleryImage)));
           },
         ),
         SimpleDialogOption(
           child: Text('바코드 인식하기'),
           onPressed: () {
-            _uploadImageToStorage(ImageSource.camera);
+            _uploadImageToStorage(ImageSource.gallery);
+            pickImage();
             Navigator.push(
                 context,
                 MaterialPageRoute(
-                    builder: (context) => Barcode(image: _image)));
+                    builder: (context) => ReadBarcode(text: text)));
+//                    builder: (context) => ReadBarcode()));
+
           },
         ),
         SimpleDialogOption(child: Text('취소'), onPressed: () {}),
