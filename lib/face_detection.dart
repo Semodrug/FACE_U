@@ -1,20 +1,31 @@
 import 'package:flutter/material.dart';
 import 'dart:io';
 
-class FaceDetection extends StatefulWidget {
-  final File image;
+import 'package:image_picker/image_picker.dart';
 
-  const FaceDetection({Key key, this.image}) : super(key: key);
+class FaceDetection extends StatefulWidget {
   @override
-  _FaceDetectionState createState() => _FaceDetectionState(image);
+  _FaceDetectionState createState() => _FaceDetectionState();
 }
 
 class _FaceDetectionState extends State<FaceDetection> {
-  final File image;
-  _FaceDetectionState(this.image);
+  File _image;
+  final picker = ImagePicker();
+
+  void getImage() async {
+    final PickedFile picked =
+        await picker.getImage(source: ImageSource.gallery);
+
+    if (picked == null) return;
+    setState(() {
+      _image = File(picked.path);
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
+    getImage();
+
     return Container();
   }
 }
