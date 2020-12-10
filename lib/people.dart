@@ -7,13 +7,14 @@ import 'detail.dart';
 final FirebaseAuth _auth = FirebaseAuth.instance;
 final String auth_id = _auth.currentUser.uid;
 
+int num ; // streambuilder 로 불러오기
+
 class PeoplePage extends StatefulWidget {
   @override
   _PeoplePageState createState() => _PeoplePageState();
 }
 
 class _PeoplePageState extends State<PeoplePage> {
-  final num = 0; // streambuilder 로 불러오기
   String _filterOrSort = "이름순";
 
   @override
@@ -21,8 +22,9 @@ class _PeoplePageState extends State<PeoplePage> {
     ///sumi
     Query query = FirebaseFirestore.instance
         .collection('Users')
-        .doc(auth_id)
+        .doc(_auth.currentUser.uid)
         .collection('People');
+
 
     switch (_filterOrSort) {
       case "이름순":
@@ -35,8 +37,22 @@ class _PeoplePageState extends State<PeoplePage> {
     }
 
     Stream<QuerySnapshot> data = query.snapshots();
+/*
+    void countDocuments() async {
+      QuerySnapshot _myDoc = await query.getDocuments();
+      List<DocumentSnapshot> _myDocCount = _myDoc.docs;
+      print(_myDocCount.length);
+      num = _myDocCount.length.toString();// Count of Documents in Collection
+    }
+    */
+    Future totalNum() async {
+      var querySnapshot = await query.getDocuments();
+      var totalEquals = querySnapshot.docs.length;
 
-    ///
+      num = totalEquals;
+      return totalEquals;
+    }
+    totalNum();
 
     return Scaffold(
       body: _buildBody(context, data),
@@ -45,6 +61,7 @@ class _PeoplePageState extends State<PeoplePage> {
         child: Icon(Icons.add),
         onPressed: () {
           Navigator.pushNamed(context, '/add');
+          //countDocuments();
         },
       ),
       //TODO: floating button presse 하면 Addpage
@@ -70,6 +87,7 @@ class _PeoplePageState extends State<PeoplePage> {
                   },
                   child: Text(
                     num.toString(),
+                    //num,
                     style: TextStyle(color: Colors.teal[400], fontSize: 12.0),
                   ),
                 ),
@@ -132,11 +150,10 @@ class _PeoplePageState extends State<PeoplePage> {
 
   Widget _buildBody(BuildContext context, Stream<QuerySnapshot> data) {
     return StreamBuilder<QuerySnapshot>(
-        //stream: Firestore.instance.collection('Persons').snapshots(),
-        ///sumi
+      //stream: Firestore.instance.collection('Persons').snapshots(),
+      ///sumi
         stream: data,
         //stream: person_data.orderBy('name', descending: isDescending).snapshots(),
-
         builder: (context, stream) {
           if (!stream.hasData) return LinearProgressIndicator();
 
@@ -163,7 +180,7 @@ class _PeoplePageState extends State<PeoplePage> {
           child: ListView(
             padding: EdgeInsets.all(16.0),
             children:
-                snapshot.map((data) => _buildListItem(context, data)).toList(),
+            snapshot.map((data) => _buildListItem(context, data)).toList(),
           ),
         ),
         SizedBox(
@@ -295,13 +312,13 @@ class ListCards extends StatefulWidget {
   final String id;
 
   const ListCards(
-    this.name,
-    this.relationship,
-    this.image_url,
-    this.group,
-    this.id, {
-    Key key,
-  }) : super(key: key);
+      this.name,
+      this.relationship,
+      this.image_url,
+      this.group,
+      this.id, {
+        Key key,
+      }) : super(key: key);
 
   @override
   _ListCardsState createState() => _ListCardsState();
@@ -315,32 +332,32 @@ class _ListCardsState extends State<ListCards> {
         height: 110,
         child: Card(
             child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: <Widget>[
-            ListTile(
-              leading: Container(
-                width: 84,
-                height: 84,
-                child: Image.network(widget.image_url),
-              ),
-              title: Text("이름 : ${widget.name}",
-                  style: Theme.of(context).textTheme.bodyText1),
-              subtitle: Text(
-                  "관계 : ${widget.relationship}" + '\n' + '그룹 : ${widget.group}',
-                  style: Theme.of(context).textTheme.bodyText2),
-              onTap: () {
-                //print('DOC ID ==> ${widget.id}');
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (BuildContext context) => Detail(widget.id),
+              mainAxisSize: MainAxisSize.min,
+              children: <Widget>[
+                ListTile(
+                  leading: Container(
+                    width: 84,
+                    height: 84,
+                    child: Image.network(widget.image_url),
                   ),
-                );
-                //print('      확인     ');
-                //print(widget.id);
-              },
-            )
-          ],
-        )));
+                  title: Text("이름 : ${widget.name}",
+                      style: Theme.of(context).textTheme.bodyText1),
+                  subtitle: Text(
+                      "관계 : ${widget.relationship}" + '\n' + '그룹 : ${widget.group}',
+                      style: Theme.of(context).textTheme.bodyText2),
+                  onTap: () {
+                    //print('DOC ID ==> ${widget.id}');
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (BuildContext context) => Detail(widget.id),
+                      ),
+                    );
+                    //print('      확인     ');
+                    //print(widget.id);
+                  },
+                )
+              ],
+            )));
   }
 }

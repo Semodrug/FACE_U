@@ -2,6 +2,12 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'people.dart';
 import 'update.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+
+
+//임시
+final FirebaseAuth _auth = FirebaseAuth.instance;
+final String auth_id = _auth.currentUser.uid;
 
 class Detail extends StatefulWidget {
   final String id;
@@ -30,7 +36,7 @@ class _DetailState extends State<Detail> {
     return StreamBuilder<DocumentSnapshot>(
         stream: FirebaseFirestore.instance
             .collection('Users')
-            .doc(auth_id)
+            .doc(_auth.currentUser.uid)
             .collection('People')
             .doc(widget.id)
             .snapshots(),
@@ -44,6 +50,8 @@ class _DetailState extends State<Detail> {
   Widget _buildListItem(BuildContext context, DocumentSnapshot data) {
     final person = Persons.fromSnapshot(data);
     String docID = data.id;
+    List<dynamic> listOfFeatures = [];
+    listOfFeatures = person.features;
 
     return Padding(
       padding: const EdgeInsets.fromLTRB(16.0, 8.0, 8.0, 16.0),
@@ -93,6 +101,8 @@ class _DetailState extends State<Detail> {
                         .collection('People')
                         .doc(widget.id)
                         .delete();
+
+                    num = num - 1;
                   },
                   textColor: Colors.blue,
                 ),
@@ -136,6 +146,21 @@ class _DetailState extends State<Detail> {
                 SizedBox(
                   height: 5,
                 ),
+                Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: List.generate(listOfFeatures.length, (index) {
+                  return
+                    Column(children: [
+                      Text(
+                        '특징${index + 1} :  ${listOfFeatures[index]}',
+                        style: Theme.of(context).textTheme.bodyText1,
+                      ) ,
+                      SizedBox(
+                        height: 5,
+                      ),
+                    ]);
+                }))
               ],
             ),
             //for(i)
