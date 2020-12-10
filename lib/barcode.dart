@@ -1,4 +1,3 @@
-/*
 import 'dart:io';
 
 import 'package:flutter/material.dart';
@@ -7,48 +6,45 @@ import 'package:firebase_ml_vision/firebase_ml_vision.dart';
 
 
 class ReadBarcode extends StatefulWidget {
-*/
-/*  @override
-  _ReadBarcodeState createState() => _ReadBarcodeState();*//*
+  @override
+  _ReadBarcodeState createState() => _ReadBarcodeState();
 
 
-  final File image;
+/*  final File image;
   const ReadBarcode({Key key, this.image}) : super(key: key);
   @override
-  _ReadBarcodeState createState() => _ReadBarcodeState(image);
+  _ReadBarcodeState createState() => _ReadBarcodeState(image);*/
 
-*/
 /*  final String text;
   const ReadBarcode({Key key, this.text, File image}) : super(key: key);
   @override
-  _ReadBarcodeState createState() => _ReadBarcodeState(text);*//*
+  _ReadBarcodeState createState() => _ReadBarcodeState(text);*/
 
 }
 
 class _ReadBarcodeState extends State<ReadBarcode> {
-  final File image;
-  _ReadBarcodeState(this.image);
+/*  final File image;
+  _ReadBarcodeState(this.image);*/
 
-*/
 /*  final String text;
-  _ReadBarcodeState(this.text);*//*
+  _ReadBarcodeState(this.text);*/
 
 
 
 
   File pickedImage;
   var text = '';
-//  bool imageLoaded = false;
+  bool imageLoaded = false;
 
   Future pickImage() async {
-//    var awaitImage = await ImagePicker.pickImage(source: ImageSource.gallery);
+    var awaitImage = await ImagePicker.pickImage(source: ImageSource.gallery);
 
-//    setState(() {
-//      pickedImage = awaitImage;
-//      imageLoaded = true;
-//    });
+    setState(() {
+      pickedImage = awaitImage;
+      imageLoaded = true;
+    });
 
-    FirebaseVisionImage visionImage = FirebaseVisionImage.fromFile(image);
+    FirebaseVisionImage visionImage = FirebaseVisionImage.fromFile(awaitImage);
     VisionText readedText;
 
     final BarcodeDetector barcodeDetector =
@@ -125,10 +121,14 @@ class _ReadBarcodeState extends State<ReadBarcode> {
     );
   }
 }
-*/
 
 
-import 'dart:io';
+
+
+
+
+
+/*import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
@@ -136,13 +136,13 @@ import 'package:firebase_ml_vision/firebase_ml_vision.dart';
 
 
 class ReadBarcode extends StatefulWidget {
-/*  @override
-  _ReadBarcodeState createState() => _ReadBarcodeState();*/
+*//*  @override
+  _ReadBarcodeState createState() => _ReadBarcodeState();*//*
 
-/*  final File image;
+*//*  final File image;
   const ReadBarcode({Key key, this.image}) : super(key: key);
   @override
-  _ReadBarcodeState createState() => _ReadBarcodeState(image);*/
+  _ReadBarcodeState createState() => _ReadBarcodeState(image);*//*
 
   final String text;
   const ReadBarcode({Key key, this.text}) : super(key: key);
@@ -151,8 +151,8 @@ class ReadBarcode extends StatefulWidget {
 }
 
 class _ReadBarcodeState extends State<ReadBarcode> {
-/*  final File image;
-  _ReadBarcodeState(this.image);*/
+*//*  final File image;
+  _ReadBarcodeState(this.image);*//*
 
   final String text;
   _ReadBarcodeState(this.text);
@@ -163,7 +163,7 @@ class _ReadBarcodeState extends State<ReadBarcode> {
 //  var text = '';
 //  bool imageLoaded = false;
 
-/*  Future pickImage() async {
+*//*  Future pickImage() async {
 //    var awaitImage = await ImagePicker.pickImage(source: ImageSource.gallery);
 
 //    setState(() {
@@ -192,7 +192,7 @@ class _ReadBarcodeState extends State<ReadBarcode> {
 
     }
     barcodeDetector.close();
-  }*/
+  }*//*
 
 
   @override
@@ -205,7 +205,7 @@ class _ReadBarcodeState extends State<ReadBarcode> {
               Center()
           :
           Text("pick image: "+ text),
-          /*Center(
+          *//*Center(
               child: Container(
                 decoration: BoxDecoration(
                   color: Colors.white,
@@ -219,7 +219,7 @@ class _ReadBarcodeState extends State<ReadBarcode> {
 //                  pickedImage,
 //                  fit: BoxFit.cover,
 //                ),
-              )),*/
+              )),*//*
           SizedBox(height: 30.0),
           Text("pick image: "+ text),
           SizedBox(height: 30.0),
@@ -235,7 +235,7 @@ class _ReadBarcodeState extends State<ReadBarcode> {
       ),
     );
   }
-}
+}*/
 
 
 

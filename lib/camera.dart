@@ -27,37 +27,6 @@ class CameraState extends State<Camera> {
   FirebaseStorage _firebaseStorage = FirebaseStorage.instance;
   String _profileImageURL = "";
 
-  var text = '';
-  Future pickImage() async {
-//    var awaitImage = await ImagePicker.pickImage(source: ImageSource.gallery);
-
-//    setState(() {
-//      pickedImage = awaitImage;
-//      imageLoaded = true;
-//    });
-
-    FirebaseVisionImage visionImage = FirebaseVisionImage.fromFile(galleryImage);
-    VisionText readedText;
-
-    final BarcodeDetector barcodeDetector =
-    FirebaseVision.instance.barcodeDetector();
-
-    final List<Barcode> barcodes =
-    await barcodeDetector.detectInImage(visionImage);
-
-    for (Barcode barcode in barcodes) {
-
-      final String rawValue = barcode.rawValue;
-      final BarcodeValueType valueType = barcode.valueType;
-
-      setState(() {
-        text ="$rawValue";
-//        text ="$rawValue\nType: $valueType";
-      });
-
-    }
-    barcodeDetector.close();
-  }
 
 
   @override
@@ -106,12 +75,11 @@ class CameraState extends State<Camera> {
           child: Text('바코드 인식하기'),
           onPressed: () {
             _uploadImageToStorage(ImageSource.gallery);
-            pickImage();
             Navigator.push(
                 context,
                 MaterialPageRoute(
-                    builder: (context) => ReadBarcode(text: text)));
-//                    builder: (context) => ReadBarcode()));
+//                    builder: (context) => ReadBarcode(text: text)));
+                    builder: (context) => ReadBarcode()));
 
           },
         ),
