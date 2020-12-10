@@ -28,21 +28,24 @@ class _UpdateState extends State<Update> {
   @override
   Widget build(BuildContext context) {
     final person = Persons.fromSnapshot(widget.data);
+    var i =0;
 
     _nameCon.text = person.name;
     _groupCon.text = person.group;
     _relationCon.text = person.relation;
     //list
-    //List<TextEditingController> _featuresCon = List.generate(person.features.length, (i) => TextEditingController());
-
+    List<TextEditingController> _FCon = List.generate(person.features.length, (i) => TextEditingController());
+    List<dynamic> list_features = [];
     Map<String,TextEditingController> _featuresCon = {};
     var textFields = <TextField>[];
     person.features.forEach((feat) {
-      var textEditingController = new TextEditingController(text: feat);
-      _featuresCon.putIfAbsent(feat, () => textEditingController);
-      return textFields.add(TextField(controller: textEditingController));
+      TextEditingController _fCon = new TextEditingController(text: feat);
+      _featuresCon.putIfAbsent(feat, () => _fCon);
+      _FCon[i] = _fCon;
+      i = i +1;
+      return textFields.add(TextField(controller: _fCon));
     });
-    print('LIST ==> ${textFields[0]}');
+    //print('LIST ==> ${_featuresCon[0].text}');
 
       return Scaffold(
       appBar: AppBar(
@@ -58,7 +61,7 @@ class _UpdateState extends State<Update> {
             _groupCon.clear();
             _relationCon.clear();
             //list
-            //_featuresCon.clear();
+            _FCon.clear();
             Navigator.pop(context);
           },
         ),
@@ -71,14 +74,19 @@ class _UpdateState extends State<Update> {
 //                    _relationCon.text, person.image_url, person.features);
 //              }
               if (_nameCon.text.isNotEmpty) {
+                for (var i = 0; i < person.features.length; i++) {
+                  list_features.add(new ListTile());
+                  print(list_features);
+                }
+
+
                 updateDoc(widget.data.id, _nameCon.text, _groupCon.text,
-                    _relationCon.text, person.image_url, person.features);
+                    _relationCon.text, person.image_url, list_features);
               }
               _nameCon.clear();
               _groupCon.clear();
               _relationCon.clear();
-
-             // _featuresCon.clear();
+              _FCon.clear();
 
 
               Navigator.pop(context);
@@ -86,7 +94,10 @@ class _UpdateState extends State<Update> {
           )
         ],
       ),
-      body: Column(
+      body:
+
+
+      Column(
         children: <Widget>[
           Expanded(
             child: Container(
@@ -124,12 +135,12 @@ class _UpdateState extends State<Update> {
                       children:
 
                       List.generate(person.features.length, (index) {
-                        print(textFields[index]);
+                        //print(textFields[index]);
                         return
                           Column(children: [
                             TextField(
                               autofocus: true,
-                              controller: _relationCon,
+                              controller: _FCon[index],
                               decoration: InputDecoration(
                                   border: InputBorder.none, labelText: "특징"),
                               //'특징${index + 1} :  ${listOfFeatures[index]}',
