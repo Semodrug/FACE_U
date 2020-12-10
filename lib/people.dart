@@ -37,14 +37,7 @@ class _PeoplePageState extends State<PeoplePage> {
     }
 
     Stream<QuerySnapshot> data = query.snapshots();
-/*
-    void countDocuments() async {
-      QuerySnapshot _myDoc = await query.getDocuments();
-      List<DocumentSnapshot> _myDocCount = _myDoc.docs;
-      print(_myDocCount.length);
-      num = _myDocCount.length.toString();// Count of Documents in Collection
-    }
-    */
+
     Future totalNum() async {
       var querySnapshot = await query.getDocuments();
       var totalEquals = querySnapshot.docs.length;
@@ -193,32 +186,11 @@ class _PeoplePageState extends State<PeoplePage> {
   Widget _buildListItem(BuildContext context, DocumentSnapshot data) {
     final person = Persons.fromSnapshot(data);
     String docID = data.id;
-    //print(docID);
 
     return ListCards(
         person.name, person.relation, person.image_url, person.group, docID);
   }
-/*
-  //TODO: Query 사용하기
-  void _onActionSelected(String value) async {
-    if (value == "이름순") {
-      WriteBatch batch = FirebaseFirestore.instance.batch();
 
-      await query.get().then((querySnapshot) async {
-        await batch.commit();
-
-        setState(() {
-          _filterOrSort = "이름순";
-        });
-      });
-    } else {
-      setState(() {
-        _filterOrSort = value;
-      });
-    }
-  }
-
-  */
 }
 
 class Persons {
@@ -346,15 +318,13 @@ class _ListCardsState extends State<ListCards> {
                       "관계 : ${widget.relationship}" + '\n' + '그룹 : ${widget.group}',
                       style: Theme.of(context).textTheme.bodyText2),
                   onTap: () {
-                    //print('DOC ID ==> ${widget.id}');
                     Navigator.push(
                       context,
                       MaterialPageRoute(
                         builder: (BuildContext context) => Detail(widget.id),
                       ),
                     );
-                    //print('      확인     ');
-                    //print(widget.id);
+
                   },
                 )
               ],

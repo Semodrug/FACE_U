@@ -7,7 +7,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 
 //임시
 final FirebaseAuth _auth = FirebaseAuth.instance;
-final String auth_id = _auth.currentUser.uid;
+String DOCid = '';
+//final String auth_id = _auth.currentUser.uid;
 
 class Detail extends StatefulWidget {
   final String id;
@@ -50,6 +51,7 @@ class _DetailState extends State<Detail> {
   Widget _buildListItem(BuildContext context, DocumentSnapshot data) {
     final person = Persons.fromSnapshot(data);
     String docID = data.id;
+    DOCid = docID;
     List<dynamic> listOfFeatures = [];
     listOfFeatures = person.features;
 
