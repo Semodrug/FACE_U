@@ -30,10 +30,9 @@ class _ReadBarcodeState extends State<ReadBarcode> {
   _ReadBarcodeState(this.text);*/
 
 
-
-
   File pickedImage;
   var text = '';
+
   bool imageLoaded = false;
 
   Future pickImage() async {
@@ -44,7 +43,7 @@ class _ReadBarcodeState extends State<ReadBarcode> {
       imageLoaded = true;
     });
 
-    FirebaseVisionImage visionImage = FirebaseVisionImage.fromFile(awaitImage);
+    FirebaseVisionImage visionImage = FirebaseVisionImage.fromFile(pickedImage);
     VisionText readedText;
 
     final BarcodeDetector barcodeDetector =
@@ -60,7 +59,6 @@ class _ReadBarcodeState extends State<ReadBarcode> {
 
       setState(() {
         text ="$rawValue";
-//        text ="$rawValue\nType: $valueType";
       });
 
     }
@@ -68,7 +66,8 @@ class _ReadBarcodeState extends State<ReadBarcode> {
   }
 
 
-  @override
+
+/*  @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: Column(
@@ -84,10 +83,10 @@ class _ReadBarcodeState extends State<ReadBarcode> {
                 ),
                 margin: EdgeInsets.fromLTRB(0, 0, 0, 8),
                 height: 250,
-//                child: Image.file(
-//                  pickedImage,
-//                  fit: BoxFit.cover,
-//                ),
+                child: Image.file(
+                  pickedImage,
+                  fit: BoxFit.cover,
+                ),
               )),
           SizedBox(height: 10.0),
           Center(
@@ -116,6 +115,60 @@ class _ReadBarcodeState extends State<ReadBarcode> {
               ),
             ),
           ),
+        ],
+      ),
+    );
+  }*/
+
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: Column(
+        children: <Widget>[
+          SizedBox(height: 100.0),
+          imageLoaded
+              ? Center(
+              child: Column(
+                children: [
+                  Container(
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      boxShadow: const [
+                        BoxShadow(blurRadius: 20),
+                      ],
+                    ),
+                    margin: EdgeInsets.fromLTRB(0, 0, 0, 8),
+                    height: 250,
+                    child: Image.file(
+                      pickedImage,
+                      fit: BoxFit.cover,
+                    ),
+                  ),
+                  SizedBox(height: 20.0),
+                  Text("Barcode Number:  "+text),
+                ],
+              ))
+              : Container(
+            child: Center(
+              child: InkWell(
+                child: Container(
+                  height: 150,
+                  width: 200,
+//                  color: Colors.grey,
+                  child: Column(
+                    children: [
+                      Icon(Icons.photo_camera, size: 100),
+                      SizedBox(height: 10,),
+                      Text('바코드 인식', style: TextStyle(color: Colors.blue, fontSize: 15),)
+                    ],
+                  ),
+                ),
+                onTap: () async{pickImage();},
+              ),
+            )
+          ),
+
         ],
       ),
     );
