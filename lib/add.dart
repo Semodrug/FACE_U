@@ -241,18 +241,23 @@ class _AddPageState extends State<AddPage> {
               ),
               // TODO: hint theme with 은영
               TextField(
+                style: Theme.of(context).textTheme.bodyText1,
                 controller: _nameCtl,
                 decoration: InputDecoration(
                     hintText: '이름을 입력해주세요',
-                    hintStyle: TextStyle(color: Colors.grey)),
+                    hintStyle: TextStyle(color: Colors.grey, )),
+                    //hintStyle: TextStyle( style: Theme.of(context).textTheme.bodyText2)
+
               ), // border: OutlineInputBorder()
               TextField(
+                style: Theme.of(context).textTheme.bodyText1,
                 controller: _relationCtl,
                 decoration: InputDecoration(
                     hintText: '관계를 입력해주세요 (엄마, 친구, 상사 등)',
                     hintStyle: TextStyle(color: Colors.grey)),
               ),
               TextField(
+                style: Theme.of(context).textTheme.bodyText1,
                 controller: _groupCtl,
                 decoration: InputDecoration(
                     hintText: '소속을 입력해주세요 (가족, 학교, 직장 등)',
@@ -265,6 +270,7 @@ class _AddPageState extends State<AddPage> {
               /* Features */
 
               TextField(
+                style: Theme.of(context).textTheme.bodyText1,
                 controller: _featureCtl_1,
                 decoration: InputDecoration(
                     hintText: '특징을 입력해주세요',
@@ -284,7 +290,8 @@ class _AddPageState extends State<AddPage> {
               ),
               secondFeature
                   ? TextField(
-                      controller: _featureCtl_2,
+                style: Theme.of(context).textTheme.bodyText1,
+                controller: _featureCtl_2,
                       decoration: InputDecoration(
                           hintText: '특징을 입력해주세요',
                           hintStyle: TextStyle(color: Colors.grey),
