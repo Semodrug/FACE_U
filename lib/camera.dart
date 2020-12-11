@@ -27,7 +27,6 @@ class CameraState extends State<Camera> {
             Navigator.pushNamed(context, '/barcode');
           },
         ),
-        SimpleDialogOption(child: Text('취소'), onPressed: () {}),
       ],
     );
   }

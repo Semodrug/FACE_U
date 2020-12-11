@@ -16,6 +16,10 @@ class _FaceDetectionState extends State<FaceDetection> {
 
   bool isFaceDetected = false;
 
+  var leftProb = 0.0;
+  var rightProb = 0.0;
+  var smileProb = 0.0;
+
   Future pickImage() async {
     var awaitImage = await ImagePicker.pickImage(source: ImageSource.gallery);
 
@@ -28,7 +32,8 @@ class _FaceDetectionState extends State<FaceDetection> {
     });
     FirebaseVisionImage visionImage = FirebaseVisionImage.fromFile(pickedImage);
 
-    final FaceDetector faceDetector = FirebaseVision.instance.faceDetector();
+    final FaceDetector faceDetector = FirebaseVision.instance
+        .faceDetector(FaceDetectorOptions(enableClassification: true));
 
     final List<Face> faces = await faceDetector.processImage(visionImage);
     if (rect.length > 0) {
@@ -43,6 +48,19 @@ class _FaceDetectionState extends State<FaceDetection> {
           face.headEulerAngleZ; // Head is tilted sideways rotZ degrees
       print('the rotation y is ' + rotY.toStringAsFixed(2));
       print('the rotation z is ' + rotZ.toStringAsFixed(2));
+
+      if (face.leftEyeOpenProbability != null) {
+        print('left prob is ${face.leftEyeOpenProbability} ');
+        leftProb = face.leftEyeOpenProbability * 100;
+      }
+      if (face.rightEyeOpenProbability != null) {
+        print('right prob is ${face.rightEyeOpenProbability} ');
+        rightProb = face.rightEyeOpenProbability * 100;
+      }
+      if (face.smilingProbability != null) {
+        print('smiling prob is ${face.rightEyeOpenProbability} ');
+        smileProb = face.smilingProbability * 100;
+      }
     }
 
     setState(() {
@@ -53,9 +71,11 @@ class _FaceDetectionState extends State<FaceDetection> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+          title: Text("Face Detection",
+              style: Theme.of(context).textTheme.headline1)),
       body: Column(
         children: <Widget>[
-          SizedBox(height: 50.0),
           isFaceDetected
               ? Center(
                   child: Container(
@@ -79,19 +99,67 @@ class _FaceDetectionState extends State<FaceDetection> {
                   ),
                 )
               : Container(),
-          Center(
-            child: FlatButton.icon(
-              icon: Icon(
-                Icons.photo_camera,
-                size: 100,
+          SizedBox(height: 20.0),
+          Row(children: [
+            SizedBox(width: 10),
+            InkWell(
+              child: Container(
+                height: 100,
+                width: 100,
+                child: Column(
+                  children: [
+                    Icon(Icons.photo_camera, size: 60),
+                    SizedBox(
+                      height: 10,
+                    ),
+                    Text(
+                      '얼굴 인식',
+                      style: TextStyle(color: Colors.blue, fontSize: 15),
+                    ),
+                  ],
+                ),
               ),
-              label: Text(''),
-              textColor: Theme.of(context).primaryColor,
-              onPressed: () async {
+              onTap: () async {
                 pickImage();
               },
             ),
-          ),
+            SizedBox(width: 10),
+            Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text("결과"),
+                SizedBox(height: 10.0),
+                Text("왼쪽 눈을 뜬 확률: $leftProb"),
+                Text("오른쪽 눈을 뜬 확률: $rightProb"),
+                Text("웃은 확률: $smileProb"),
+              ],
+            )
+          ]),
+//           Center(
+//             child: InkWell(
+//               child: Container(
+//                 height: 150,
+//                 width: 200,
+// //                  color: Colors.grey,
+//                 child: Column(
+//                   children: [
+//                     Icon(Icons.photo_camera, size: 80),
+//                     SizedBox(
+//                       height: 10,
+//                     ),
+//                     Text(
+//                       '얼굴 인식',
+//                       style: TextStyle(color: Colors.blue, fontSize: 15),
+//                     )
+//                   ],
+//                 ),
+//               ),
+//               onTap: () async {
+//                 pickImage();
+//               },
+//             ),
+//           ),
         ],
       ),
     );
