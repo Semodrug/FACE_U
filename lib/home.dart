@@ -27,8 +27,10 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-          backgroundColor: Theme.of(context).primaryColor,
-          title: Text("FaceU", style: Theme.of(context).textTheme.headline1)
+        backgroundColor: Theme.of(context).primaryColor,
+        automaticallyImplyLeading: false,
+          title: Text("FACE U", style: Theme.of(context).textTheme.headline1),
+
       ),
       body: Center(
         child: _widgetOptions.elementAt(_selectedIndex),
