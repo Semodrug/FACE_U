@@ -146,23 +146,37 @@ class _DetailState extends State<Detail> {
                   thickness: 2,
                 ),
                 SizedBox(
-                  height: 5,
+                  height: 10,
+                ),
+
+                Text(
+                  '대표 물건 바코드:    ${person.barcode}',
+                  style: Theme.of(context).textTheme.bodyText1,
+                ),
+                Divider(
+                  thickness: 2,
+                ),
+                SizedBox(
+                  height: 10,
                 ),
                 Column(
                     mainAxisAlignment: MainAxisAlignment.start,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: List.generate(listOfFeatures.length, (index) {
-                  return
-                    Column(children: [
-                      Text(
-                        '특징${index + 1} :  ${listOfFeatures[index]}',
-                        style: Theme.of(context).textTheme.bodyText1,
-                      ) ,
-                      SizedBox(
-                        height: 5,
-                      ),
-                    ]);
-                }))
+                      return
+                        Column(children: [
+                          Text(
+                            '특징${index + 1} :  ${listOfFeatures[index]}',
+                            style: Theme.of(context).textTheme.bodyText1,
+                          ) ,
+                          SizedBox(
+                            height: 5,
+                          ),
+                        ]);
+                    })),
+                SizedBox(
+                  height: 5,
+                ),
               ],
             ),
             //for(i)

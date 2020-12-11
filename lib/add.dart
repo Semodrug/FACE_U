@@ -150,7 +150,8 @@ class _AddPageState extends State<AddPage> {
           'relation': _relationCtl.text,
           'group': _groupCtl.text,
           'features': featureList,
-          'image_url': _profileImageURL
+          'image_url': _profileImageURL,
+          'barcode': _barcodeCtl.text
         });
 
         print(
@@ -221,7 +222,7 @@ class _AddPageState extends State<AddPage> {
                           fit: BoxFit.fill,
                           image: _image == null
                               ? NetworkImage(
-                                  "https://png.pngitem.com/pimgs/s/105-1050694_user-placeholder-image-png-transparent-png.png")
+                                  "https://images.ctfassets.net/ww1ie0z745y7/3TDIeiOeNWUX7WupIfbRy/e25acfb5d2a2a09ea7da7c64a247b9e0/anonymous-unknown-headshot-circle-icon.jpg")
                               : FileImage(_image)))),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -346,7 +347,8 @@ class _AddPageState extends State<AddPage> {
                   : SizedBox(),
               thirdFeature
                   ? TextField(
-                      controller: _featureCtl_3,
+                style: Theme.of(context).textTheme.bodyText1,
+                controller: _featureCtl_3,
                       decoration: InputDecoration(
                           hintText: '특징을 입력해주세요',
                           hintStyle: TextStyle(color: Colors.grey),
@@ -366,17 +368,20 @@ class _AddPageState extends State<AddPage> {
                   : SizedBox(),
               fourthFeature
                   ? TextField(
-                      controller: _featureCtl_4,
+                style: Theme.of(context).textTheme.bodyText1,
+                controller: _featureCtl_4,
                       decoration: InputDecoration(
                         hintText: '특징을 입력해주세요',
                         hintStyle: TextStyle(color: Colors.grey),
                       ),
                     )
                   : SizedBox(),
-
+              SizedBox(
+                height: 20,
+              ),
               TextField(
                 style: Theme.of(context).textTheme.bodyText1,
-                controller: _featureCtl_3,
+                controller: _barcodeCtl,
                 decoration: InputDecoration(
                     hintText: '바코드를 등록하세요',
                     hintStyle: TextStyle(color: Colors.grey),
@@ -387,9 +392,9 @@ class _AddPageState extends State<AddPage> {
                       ),
                       onPressed: () async{
                         pickImage();
+                        print(text);
+                        _barcodeCtl.text = text;
                       },
-
-
                     )
                     ),
               )

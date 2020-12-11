@@ -199,6 +199,7 @@ class Persons {
   final List<dynamic> features;
   final String relation;
   final String group;
+  final String barcode;
 
   final DocumentReference reference;
 
@@ -210,7 +211,8 @@ class Persons {
         image_url = map['image_url'],
         features = map['features'],
         relation = map['relation'],
-        group = map['group'];
+        group = map['group'],
+        barcode = map['barcode'];
 
   Persons.fromSnapshot(DocumentSnapshot snapshot)
       : this.fromMap(snapshot.data(), reference: snapshot.reference);
