@@ -29,7 +29,7 @@ class _HomePageState extends State<HomePage> {
       appBar: AppBar(
         backgroundColor: Theme.of(context).primaryColor,
         automaticallyImplyLeading: false,
-          title: Text("FACE U", style: Theme.of(context).textTheme.headline1),
+          title: Text("Face U", style: Theme.of(context).textTheme.headline1),
 
       ),
       body: Center(

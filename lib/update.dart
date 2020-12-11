@@ -70,13 +70,15 @@ class _UpdateState extends State<Update> {
     return Scaffold(
       appBar: AppBar(
         title: new Center(child: new Text('Edit', textAlign: TextAlign.center)),
-        leading: FlatButton(
-          child: SizedBox(
-            width: 100,
-            child: Text('취소'),
+        leading: InkWell(
+          child:
+          Padding(
+            padding: const EdgeInsets.fromLTRB(16, 15, 0, 0),
+            child: Text(
+                '취소'
+            ),
           ),
-          //TODO: 뒤로가기
-          onPressed: () {
+          onTap: () {
             _nameCon.clear();
             _groupCon.clear();
             _relationCon.clear();

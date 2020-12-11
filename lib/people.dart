@@ -319,6 +319,25 @@ class _ListCardsState extends State<ListCards> {
                   subtitle: Text(
                       "관계 : ${widget.relationship}" + '\n' + '그룹 : ${widget.group}',
                       style: Theme.of(context).textTheme.bodyText2),
+                  trailing:                 //TODO: 삭제되었습니다 알림이 필요할까?
+                  IconButton(
+                    icon: Icon(Icons.delete),
+                    //TODO: delete 할 때 The method '[]' was called on null. 이 에러뜨는 거 방지!! 어캐
+                    onPressed: () {
+                      //Navigator.pushNamed(context, '/home');
+                      FirebaseFirestore.instance
+                          .collection('Users')
+                          .doc(auth_id)
+                          .collection('People')
+                          .doc(widget.id)
+                          .delete();
+
+                      Navigator.pop(context);
+
+                      num = num - 1;
+                    },
+                    //textColor: Colors.blue,
+                  ),
                   onTap: () {
                     Navigator.push(
                       context,

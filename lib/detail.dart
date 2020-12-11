@@ -88,26 +88,6 @@ class _DetailState extends State<Detail> {
                   },
                   textColor: Colors.blue,
                 ),
-                //TODO: 삭제되었습니다 알림이 필요할까?
-                FlatButton(
-                  child: Text(
-                    '삭제',
-                  ),
-                  //TODO: delete 할 때 The method '[]' was called on null. 이 에러뜨는 거 방지!! 어캐
-                  onPressed: () {
-                    //Navigator.pushNamed(context, '/home');
-                    Navigator.pop(context);
-                    FirebaseFirestore.instance
-                        .collection('Users')
-                        .doc(auth_id)
-                        .collection('People')
-                        .doc(widget.id)
-                        .delete();
-
-                    num = num - 1;
-                  },
-                  textColor: Colors.blue,
-                ),
               ],
             ),
             SizedBox(
