@@ -1,10 +1,9 @@
+import 'package:firebase_ml_vision/firebase_ml_vision.dart';
 import 'package:flutter/material.dart';
 import 'dart:io';
-
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
-
 import 'package:image_picker/image_picker.dart';
 
 class AddPage extends StatefulWidget {
@@ -25,6 +24,7 @@ class _AddPageState extends State<AddPage> {
   TextEditingController _featureCtl_2 = TextEditingController();
   TextEditingController _featureCtl_3 = TextEditingController();
   TextEditingController _featureCtl_4 = TextEditingController();
+  TextEditingController _barcodeCtl = TextEditingController();
 
   bool secondFeature = false;
   bool thirdFeature = false;
@@ -32,6 +32,41 @@ class _AddPageState extends State<AddPage> {
   bool isFilled = false;
 
   List<dynamic> featureList = [];
+
+  File pickedImage;
+  var text = '';
+
+  bool imageLoaded = false;
+
+  Future pickImage() async {
+    var awaitImage = await ImagePicker.pickImage(source: ImageSource.gallery);
+
+    setState(() {
+      pickedImage = awaitImage;
+      imageLoaded = true;
+    });
+
+    FirebaseVisionImage visionImage = FirebaseVisionImage.fromFile(pickedImage);
+    VisionText readedText;
+
+    final BarcodeDetector barcodeDetector =
+    FirebaseVision.instance.barcodeDetector();
+
+    final List<Barcode> barcodes =
+    await barcodeDetector.detectInImage(visionImage);
+
+    for (Barcode barcode in barcodes) {
+
+      final String rawValue = barcode.rawValue;
+      final BarcodeValueType valueType = barcode.valueType;
+
+      setState(() {
+        text ="$rawValue";
+      });
+
+    }
+    barcodeDetector.close();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -338,6 +373,27 @@ class _AddPageState extends State<AddPage> {
                       ),
                     )
                   : SizedBox(),
+
+              TextField(
+                style: Theme.of(context).textTheme.bodyText1,
+                controller: _featureCtl_3,
+                decoration: InputDecoration(
+                    hintText: '바코드를 등록하세요',
+                    hintStyle: TextStyle(color: Colors.grey),
+                    suffixIcon: IconButton(
+                      icon: Icon(
+                        Icons.camera_alt,
+                        color: Colors.lightGreen,
+                      ),
+                      onPressed: () async{
+                        pickImage();
+                      },
+
+
+                    )
+                    ),
+              )
+
             ],
           ),
         ),

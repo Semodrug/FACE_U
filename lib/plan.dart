@@ -37,7 +37,7 @@ class _PlanState extends State<Plan> {
         child: Column(
           mainAxisSize: MainAxisSize.max,
           children: [
-            SearchBar(),
+//            SearchBar(),
             Row(
               children: <Widget>[
                 SizedBox(width:15),

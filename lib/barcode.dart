@@ -66,64 +66,12 @@ class _ReadBarcodeState extends State<ReadBarcode> {
   }
 
 
-
-/*  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      body: Column(
-        children: <Widget>[
-          SizedBox(height: 100.0),
-          Center(
-              child: Container(
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  boxShadow: const [
-                    BoxShadow(blurRadius: 20),
-                  ],
-                ),
-                margin: EdgeInsets.fromLTRB(0, 0, 0, 8),
-                height: 250,
-                child: Image.file(
-                  pickedImage,
-                  fit: BoxFit.cover,
-                ),
-              )),
-          SizedBox(height: 10.0),
-          Center(
-            child: IconButton(
-              icon: Icon(
-                Icons.photo_camera,
-                size: 100,
-              ),
-//              label: Text(''),
-//              textColor: Theme.of(context).primaryColor,
-              onPressed: () async {
-                pickImage();
-              },
-            ),
-          ),
-
-          SizedBox(height: 10.0),
-          SizedBox(height: 30.0),
-          Text("pick image: "+text),
-          SizedBox(height: 30.0),
-          SingleChildScrollView(
-            child: Padding(
-              padding: const EdgeInsets.all(15.0),
-              child: Text(
-                text,
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }*/
-
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+          title: Text("Face Detection",
+              style: Theme.of(context).textTheme.headline1)),
       body: Column(
         children: <Widget>[
           SizedBox(height: 100.0),
@@ -164,7 +112,10 @@ class _ReadBarcodeState extends State<ReadBarcode> {
                     ],
                   ),
                 ),
-                onTap: () async{pickImage();},
+                onTap: () async{
+                  pickImage();
+
+                  },
               ),
             )
           ),
