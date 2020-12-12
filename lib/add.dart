@@ -14,7 +14,6 @@ class AddPage extends StatefulWidget {
 class _AddPageState extends State<AddPage> {
   File _image;
   String _profileImageURL;
-  // final picker = ImagePicker();
   FirebaseAuth auth = FirebaseAuth.instance;
 
   TextEditingController _nameCtl = TextEditingController();
@@ -32,10 +31,8 @@ class _AddPageState extends State<AddPage> {
   bool isFilled = false;
 
   List<dynamic> featureList = [];
-
   File pickedImage;
   var text = '';
-
   bool imageLoaded = false;
 
   Future pickImage() async {
@@ -50,20 +47,18 @@ class _AddPageState extends State<AddPage> {
     VisionText readedText;
 
     final BarcodeDetector barcodeDetector =
-    FirebaseVision.instance.barcodeDetector();
+        FirebaseVision.instance.barcodeDetector();
 
     final List<Barcode> barcodes =
-    await barcodeDetector.detectInImage(visionImage);
+        await barcodeDetector.detectInImage(visionImage);
 
     for (Barcode barcode in barcodes) {
-
       final String rawValue = barcode.rawValue;
       final BarcodeValueType valueType = barcode.valueType;
 
       setState(() {
-        text ="$rawValue";
+        text = "$rawValue";
       });
-
     }
     barcodeDetector.close();
   }
@@ -75,59 +70,30 @@ class _AddPageState extends State<AddPage> {
         .doc(auth.currentUser.uid)
         .collection('People');
 
-    // isFilled = _nameCtl.text.isNotEmpty &&
-    //     _relationCtl.text.isNotEmpty &&
-    //     _groupCtl.text.isNotEmpty &&
-    //     _featureCtl_1.text.isNotEmpty;
+    void _getImage(ImageSource source) async {
+      final PickedFile picked = await ImagePicker().getImage(source: source);
 
-    /* Pick image */
-    // void getImage() async {
-    //   final PickedFile picked =
-    //       await picker.getImage(source: ImageSource.gallery);
-    //
-    //   if (picked == null) return;
-    //   setState(() {
-    //     _image = File(picked.path);
-    //   });
-    // }
+      if (picked == null) return;
+      setState(() {
+        _image = File(picked.path);
+      });
+    }
 
     /* Upload picked image to firestore and Get image URL*/
-    // Future<String> uploadFile(File file) async {
-    //   String currUrl;
-    //   Reference imageRef = FirebaseStorage.instance.ref().child(_nameCtl.text);
-    //
-    //   //UploadTask currentTask = await imageRef.putFile(file);
-    //   UploadTask currentTask = imageRef.putFile(file);
-    //
-    //   print("saved successfully: [image from image picker]");
-    //
-    //   await currentTask.whenComplete(() async {
-    //     currUrl = await imageRef.getDownloadURL();
-    //
-    //     saved = true;
-    //
-    //     return currUrl;
-    //   });
-    // }
+    Future<void> _uploadFile(File file) async {
+      String currUrl;
+      Reference imageRef = FirebaseStorage.instance.ref().child(_nameCtl.text);
 
-    /* Pick image and Upload picked image to firestore and Get image URL */
-    void _uploadImageToStorage(ImageSource source) async {
-      File image = await ImagePicker.pickImage(source: source);
+      //UploadTask currentTask = await imageRef.putFile(file);
+      UploadTask currentTask = imageRef.putFile(file);
 
-      if (image == null) return;
+      print("saved successfully: [image from image picker]");
 
-      setState(() {
-        _image = image;
-      });
-
-      Reference storageReference =
-          FirebaseStorage.instance.ref().child("profile");
-
-      UploadTask storageUploadTask = storageReference.putFile(_image);
-
-      String downloadURL = await storageReference.getDownloadURL();
-      setState(() {
-        _profileImageURL = downloadURL;
+      await currentTask.whenComplete(() async {
+        String downloadURL = await imageRef.getDownloadURL();
+        setState(() {
+          _profileImageURL = downloadURL;
+        });
       });
     }
 
@@ -174,8 +140,6 @@ class _AddPageState extends State<AddPage> {
           ),
           onPressed: () {
             Navigator.pop(context);
-            // Navigator.pushNamed(context, '/home');
-            // Navigator.pushReplacementNamed(context, '/home');
           },
         ),
         title: Text(
@@ -196,6 +160,7 @@ class _AddPageState extends State<AddPage> {
                 Scaffold.of(context)
                     .showSnackBar(SnackBar(content: Text('사진을 추가해주세요!')));
               } else {
+                await _uploadFile(_image);
                 addProduct();
 
                 Navigator.pushReplacementNamed(context, '/home');
@@ -245,14 +210,14 @@ class _AddPageState extends State<AddPage> {
                                 SimpleDialogOption(
                                   child: Text('사진 촬영하기'),
                                   onPressed: () {
-                                    _uploadImageToStorage(ImageSource.camera);
+                                    _getImage(ImageSource.camera);
                                     Navigator.pop(context);
                                   },
                                 ),
                                 SimpleDialogOption(
                                   child: Text('갤러리에서 고르기'),
                                   onPressed: () {
-                                    _uploadImageToStorage(ImageSource.gallery);
+                                    _getImage(ImageSource.gallery);
                                     Navigator.pop(context);
                                   },
                                 ),
@@ -265,8 +230,6 @@ class _AddPageState extends State<AddPage> {
                               ],
                             );
                           });
-                      ;
-                      // Navigator.pushNamed(context, '/camera');
                     },
                     textColor: Colors.blue,
                   ),
@@ -281,9 +244,10 @@ class _AddPageState extends State<AddPage> {
                 controller: _nameCtl,
                 decoration: InputDecoration(
                     hintText: '이름을 입력해주세요',
-                    hintStyle: TextStyle(color: Colors.grey, )),
-                    //hintStyle: TextStyle( style: Theme.of(context).textTheme.bodyText2)
-
+                    hintStyle: TextStyle(
+                      color: Colors.grey,
+                    )),
+                //hintStyle: TextStyle( style: Theme.of(context).textTheme.bodyText2)
               ), // border: OutlineInputBorder()
               TextField(
                 style: Theme.of(context).textTheme.bodyText1,
@@ -326,8 +290,8 @@ class _AddPageState extends State<AddPage> {
               ),
               secondFeature
                   ? TextField(
-                style: Theme.of(context).textTheme.bodyText1,
-                controller: _featureCtl_2,
+                      style: Theme.of(context).textTheme.bodyText1,
+                      controller: _featureCtl_2,
                       decoration: InputDecoration(
                           hintText: '특징을 입력해주세요',
                           hintStyle: TextStyle(color: Colors.grey),
@@ -347,8 +311,8 @@ class _AddPageState extends State<AddPage> {
                   : SizedBox(),
               thirdFeature
                   ? TextField(
-                style: Theme.of(context).textTheme.bodyText1,
-                controller: _featureCtl_3,
+                      style: Theme.of(context).textTheme.bodyText1,
+                      controller: _featureCtl_3,
                       decoration: InputDecoration(
                           hintText: '특징을 입력해주세요',
                           hintStyle: TextStyle(color: Colors.grey),
@@ -368,8 +332,8 @@ class _AddPageState extends State<AddPage> {
                   : SizedBox(),
               fourthFeature
                   ? TextField(
-                style: Theme.of(context).textTheme.bodyText1,
-                controller: _featureCtl_4,
+                      style: Theme.of(context).textTheme.bodyText1,
+                      controller: _featureCtl_4,
                       decoration: InputDecoration(
                         hintText: '특징을 입력해주세요',
                         hintStyle: TextStyle(color: Colors.grey),
@@ -390,15 +354,13 @@ class _AddPageState extends State<AddPage> {
                         Icons.camera_alt,
                         color: Colors.lightGreen,
                       ),
-                      onPressed: () async{
+                      onPressed: () async {
                         pickImage();
                         print(text);
                         _barcodeCtl.text = text;
                       },
-                    )
-                    ),
+                    )),
               )
-
             ],
           ),
         ),
