@@ -35,12 +35,20 @@ class _AddPageState extends State<AddPage> {
   var text = '';
   bool imageLoaded = false;
 
+  TextEditingController getText() {
+    setState((){
+      _barcodeCtl.text = text;
+    });
+    return _barcodeCtl;
+  }
+
   Future pickImage() async {
     var awaitImage = await ImagePicker.pickImage(source: ImageSource.gallery);
 
     setState(() {
       pickedImage = awaitImage;
       imageLoaded = true;
+
     });
 
     FirebaseVisionImage visionImage = FirebaseVisionImage.fromFile(pickedImage);
@@ -345,7 +353,8 @@ class _AddPageState extends State<AddPage> {
               ),
               TextField(
                 style: Theme.of(context).textTheme.bodyText1,
-                controller: _barcodeCtl,
+//                controller: _barcodeCtl,
+                controller: getText(),
                 decoration: InputDecoration(
                     hintText: '바코드를 등록하세요',
                     hintStyle: TextStyle(color: Colors.grey),
@@ -356,9 +365,12 @@ class _AddPageState extends State<AddPage> {
                       ),
                       onPressed: () async {
                         pickImage();
-                        print(text);
-                        _barcodeCtl.text = text;
+//                        setState(() {
+//                        _barcodeCtl.text = text;
+//                        });
+
                       },
+
                     )),
               )
             ],
